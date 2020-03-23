@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -42,10 +43,14 @@ public class BlogListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void getBlogs(final View view) {
+    private void getPersonalBlogs(final View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         CollectionReference blogsCollectionsRef = db.collection("blogs");
-        blogsCollectionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        blogsCollectionsRef
+                .whereEqualTo("userID", auth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -58,6 +63,30 @@ public class BlogListFragment extends Fragment {
                 }
             }
         });
+        Log.d(TAG, "getBlogs: Number of blogs: " + blogs.size());
+    }
+
+    // TODO change query to search users connections IDs
+    private void getConnectionsBlogs(final View view) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        CollectionReference blogsCollectionsRef = db.collection("blogs");
+        blogsCollectionsRef
+                .whereEqualTo("userID", auth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: Successful connection to firestore");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, "Snapshot: blog created");
+                                Blog blog = document.toObject(Blog.class);
+                                blogs.add(blog);
+                            }
+                        }
+                    }
+                });
         Log.d(TAG, "getBlogs: Number of blogs: " + blogs.size());
     }
 
