@@ -1,5 +1,7 @@
 package cs4084.closely;
 
+import androidx.annotation.NonNull;
+
 class Blog {
     private String title;
     private String subtitle;
@@ -9,8 +11,6 @@ class Blog {
 
     public Blog() {
     }
-
-    ;
 
     public Blog(String title, String subtitle, String body, String author, String userID) {
         this.title = title;
@@ -58,5 +58,11 @@ class Blog {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return title + ", " + author + "\n";
     }
 }

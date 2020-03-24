@@ -25,25 +25,27 @@ import java.util.ArrayList;
 public class BlogListFragment extends Fragment {
     private static final String TAG = "MainActivity";
     ArrayList<Blog> blogs = new ArrayList<>();
+    BlogRecyclerViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blog_list, container, false);
+//        getPersonalBlogs();
+        fillBlogs();
         initRecyclerView(view);
         return view;
     }
 
     private void initRecyclerView(View view) {
-        fillBlogs();
         RecyclerView recyclerView = view.findViewById(R.id.blog_recycler_view);
-        BlogRecyclerViewAdapter adapter = new BlogRecyclerViewAdapter(blogs, getContext());
+        adapter = new BlogRecyclerViewAdapter(blogs, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void getPersonalBlogs(final View view) {
+    private void getPersonalBlogs() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         CollectionReference blogsCollectionsRef = db.collection("blogs");
@@ -56,14 +58,14 @@ public class BlogListFragment extends Fragment {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "onComplete: Successful connection to firestore");
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, "Snapshot: blog created");
                         Blog blog = document.toObject(Blog.class);
                         blogs.add(blog);
                     }
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
-        Log.d(TAG, "getBlogs: Number of blogs: " + blogs.size());
+
     }
 
     // TODO change query to search users connections IDs
@@ -90,11 +92,37 @@ public class BlogListFragment extends Fragment {
         Log.d(TAG, "getBlogs: Number of blogs: " + blogs.size());
     }
 
+    private void getAllBlogs(View view) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference blogsCollectionsRef = db.collection("blogs");
+        blogsCollectionsRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: Successful connection to firestore");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Blog blog = document.toObject(Blog.class);
+                                blogs.add(blog);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
     private void fillBlogs() {
-        blogs.add(new Blog("hi", "ho", "lets", "go", ""));
-        blogs.add(new Blog("hi", "ho", "lets", "go", ""));
-        blogs.add(new Blog("hi", "ho", "lets", "go", ""));
-        blogs.add(new Blog("hi", "ho", "lets", "go", ""));
-        blogs.add(new Blog("hi", "ho", "lets", "go", ""));
+        blogs.add(new Blog("We're", "ho", "lets", "go", ""));
+        blogs.add(new Blog("no", "ho", "lets", "go", ""));
+        blogs.add(new Blog("strangers", "ho", "lets", "go", ""));
+        blogs.add(new Blog("to", "ho", "lets", "go", ""));
+        blogs.add(new Blog("love,", "ho", "lets", "go", ""));
+        blogs.add(new Blog("you", "ho", "lets", "go", ""));
+        blogs.add(new Blog("know", "ho", "lets", "go", ""));
+        blogs.add(new Blog("the", "ho", "lets", "go", ""));
+        blogs.add(new Blog("rules", "ho", "lets", "go", ""));
+        blogs.add(new Blog("and", "ho", "lets", "go", ""));
+        blogs.add(new Blog("so", "ho", "lets", "go", ""));
+        blogs.add(new Blog("do", "ho", "lets", "go", ""));
+        blogs.add(new Blog("I", "ho", "lets", "go", ""));
     }
 }
