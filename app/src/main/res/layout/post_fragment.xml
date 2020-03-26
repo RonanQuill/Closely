@@ -7,7 +7,7 @@
     tools:context=".PostFragment">
 
     <EditText
-        android:id="@+id/title"
+        android:id="@+id/create_blog_title"
         android:layout_width="389dp"
         android:layout_height="46dp"
         android:background="#938C8C"
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/create_blog_title"
         app:layout_constraintVertical_bias="0.037" />
 
     <EditText
@@ -55,7 +55,7 @@
         app:layout_constraintVertical_bias="0.037" />
 
     <Button
-        android:id="@+id/postbutton"
+        android:id="@+id/post_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#938C8C"
@@ -81,4 +81,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.047" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
