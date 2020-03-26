@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: Fuck this");
+        Log.d(TAG, "onCreate:");
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         auth.signInWithEmailAndPassword("test@email.com", "password")
@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(MainActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.w(TAG, "onComplete: signin failed",task.getException());
                         }
+
                         // ...
                     }
                 });

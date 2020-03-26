@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.145" />
 
     <EditText
-        android:id="@+id/subtitle"
+        android:id="@+id/Create_blog_subtitle"
         android:layout_width="389dp"
         android:layout_height="46dp"
         android:background="#938C8C"
@@ -39,7 +39,7 @@
         app:layout_constraintVertical_bias="0.037" />
 
     <EditText
-        android:id="@+id/content"
+        android:id="@+id/Create_blog_content"
         android:layout_width="401dp"
         android:layout_height="86dp"
         android:layout_marginTop="43dp"
@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/Create_blog_subtitle"
         app:layout_constraintVertical_bias="0.037" />
 
     <Button
@@ -65,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintTop_toBottomOf="@+id/Create_blog_content"
         app:layout_constraintVertical_bias="0.167" />
 
     <TextView

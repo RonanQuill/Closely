@@ -2,13 +2,14 @@ package cs4084.closely;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 class Blog {
     private String title;
     private String subtitle;
     private String body;
     private String author;
     private String userID;
-
     public Blog() {
     }
 
