@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import cs4084.closely.R;
-import cs4084.closely.post.Post;
+import cs4084.closely.blog.Blog;
 
 public class ProfilePostsRecyclerViewAdapter extends RecyclerView.Adapter<ProfilePostsRecyclerViewAdapter.ViewHolder>{
 
-    private List<Post> posts;
+    private List<Blog> posts;
 
-    public ProfilePostsRecyclerViewAdapter(List<Post> posts) {
+    public ProfilePostsRecyclerViewAdapter(List<Blog> posts) {
         this.posts = posts;
     }
 
@@ -35,7 +35,7 @@ public class ProfilePostsRecyclerViewAdapter extends RecyclerView.Adapter<Profil
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        Post post = posts.get(position);
+        Blog post = posts.get(position);
         holder.title.setText(post.getTitle());
         holder.description.setText(post.getBody());
         holder.layout.setOnClickListener(new View.OnClickListener() {

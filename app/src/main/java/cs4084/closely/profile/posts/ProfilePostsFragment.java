@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cs4084.closely.R;
-import cs4084.closely.post.Post;
+import cs4084.closely.blog.Blog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,13 +32,13 @@ public class ProfilePostsFragment extends Fragment {
 
     private ProfilePostsRecyclerViewAdapter profilePostsRecyclerViewAdapter;
     private RecyclerView postsRecyclerView;
-    private List<Post> posts;
+    private List<Blog> posts;
 
     public ProfilePostsFragment() {
         // Required empty public constructor
     }
 
-    public ProfilePostsFragment(List<Post> posts) {
+    public ProfilePostsFragment(List<Blog> posts) {
         this.posts = posts;
     }
 

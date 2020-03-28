@@ -1,16 +1,24 @@
 package cs4084.closely.blog;
 
-import androidx.annotation.NonNull;
+import com.google.firebase.Timestamp;
 
-import com.google.firebase.auth.FirebaseAuth;
+import java.util.Map;
 
-class Blog {
+public class Blog {
     private String title;
     private String subtitle;
     private String body;
     private String author;
     private String userID;
-    public Blog() {
+    private Timestamp datePosted;
+
+    public Blog(Map<String, Object> data) {
+        this.author = data.get("author").toString();
+        this.title = data.get("title").toString();
+        this.subtitle = data.get("subtitle").toString();
+        this.body = data.get("body").toString();
+        this.userID = data.get("userID").toString();
+        this.datePosted = (Timestamp)data.get("datePosted");
     }
 
     public Blog(String title, String subtitle, String body, String author, String userID) {
@@ -25,45 +33,28 @@ class Blog {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getSubtitle() {
         return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
     }
 
     public String getBody() {
         return body;
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
-
     public String getAuthor() {
         return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public Timestamp getDatePosted() {
+        return datePosted;
     }
 
-    @NonNull
-    @Override
     public String toString() {
         return title + ", " + author + "\n";
     }
+
 }

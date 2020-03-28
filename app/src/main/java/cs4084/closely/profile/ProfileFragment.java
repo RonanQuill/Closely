@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs4084.closely.R;
+import cs4084.closely.blog.Blog;
 import cs4084.closely.connection.Connection;
-import cs4084.closely.post.Post;
 import cs4084.closely.profile.connections.ProfileConnectionsFragment;
 import cs4084.closely.profile.posts.ProfilePostsFragment;
 import cs4084.closely.user.User;
@@ -54,7 +54,7 @@ public class ProfileFragment extends Fragment {
     private TextView memberSinceTextView;
 
     private User user;
-    private List<Post> posts = new ArrayList<>();
+    private List<Blog> posts = new ArrayList<>();
     private List<Connection> connections = new ArrayList<>();
 
     private ProfilePostsFragment profilePostsFragment;
@@ -147,7 +147,7 @@ public class ProfileFragment extends Fragment {
                 if(task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     for(QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        posts.add(new Post(documentSnapshot.getData()));
+                        posts.add(new Blog(documentSnapshot.getData()));
                     }
 
                     displayPostsForUser();
