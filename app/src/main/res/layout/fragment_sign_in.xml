@@ -7,6 +7,33 @@
     android:background="#3E454C"
     tools:context=".signin.SignInFragment">
 
+    <Button
+        android:id="@+id/sign_up_btn"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="32dp"
+        android:background="#767676"
+        android:text="Sign up"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sign_in_btn"
+        app:layout_constraintEnd_toEndOf="@+id/sign_in_password"
+        app:layout_constraintTop_toTopOf="@+id/sign_in_btn" />
+
+    <Button
+        android:id="@+id/sign_in_btn"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:background="#767676"
+        android:text="Sign in"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sign_in_password"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_password"
+        app:layout_constraintVertical_bias="0.496" />
+
     <EditText
         android:id="@+id/sign_in_email"
         android:layout_width="wrap_content"
@@ -47,7 +74,7 @@
         android:id="@+id/sign_up_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Up"
+        android:text="Sign In"
         android:textColor="#FDFDFD"
         android:textSize="40dp"
         android:textStyle="bold"
@@ -57,17 +84,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.246" />
 
-    <Button
-        android:id="@+id/sign_in_btn"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:background="#767676"
-        android:text="Sign in"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_password" />
 </androidx.constraintlayout.widget.ConstraintLayout>

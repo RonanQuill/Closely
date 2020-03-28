@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -65,6 +66,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_SHORT).show();
+
+                            Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_navigationFragment);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -106,6 +109,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.sign_up_btn:
                 createAccount(emailField.getText().toString(), passwordField.getText().toString());
+                break;
         }
     }
 }

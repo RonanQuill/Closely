@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,8 +49,11 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button signInButton = getView().findViewById(R.id.sign_in_btn);
+        Button signInButton = view.findViewById(R.id.sign_in_btn);
         signInButton.setOnClickListener(this);
+
+        Button signUpButton = view.findViewById(R.id.sign_up_btn);
+        signUpButton.setOnClickListener(this);
     }
 
     @Override
@@ -57,6 +61,10 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.sign_in_btn:
                 signIn();
+                break;
+
+            case R.id.sign_up_btn:
+                Navigation.findNavController(v).navigate(R.id.action_signInFragment_to_signUpFragment);
                 break;
         }
     }
@@ -85,6 +93,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 FirebaseUser user = auth.getCurrentUser();
                                 Log.d(TAG, "Signed in user: " + user.getEmail());
                                 //TODO redirect user to home page
+                                Navigation.findNavController(getView()).navigate(R.id.action_signInFragment_to_navigationFragment);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
