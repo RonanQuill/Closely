@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -120,16 +121,18 @@ public class ProfileFragment extends Fragment {
         viewPager.setAdapter(profileViewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        loadAndDisplayUserProfile("rjgjQZNEHJuAGbY6tUPM");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        loadAndDisplayUserProfile(userId);
     }
 
     private void loadAndDisplayUserProfile(String userID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     if (document.exists()) {
                         user = new User(document.getData());
                         displayProfileForUser();
@@ -159,23 +162,23 @@ public class ProfileFragment extends Fragment {
     private void getConnectionsForUser() {
         List<String> userConnections = user.getConnections();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if(userConnections != null && !userConnections.isEmpty()) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users").whereIn("userID", userConnections).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    for(QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        connections.add(new Connection(documentSnapshot.getData()));
+            db.collection("users").whereIn("userID", userConnections).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                            connections.add(new Connection(documentSnapshot.getData()));
+                        }
+
+                        profileConnectionsFragment.notifyDataSetChanged();
                     }
-
-                    profileConnectionsFragment.notifyDataSetChanged();
-                    //displayConnectionsForUser();
                 }
-            }
-        });
-
+            });
+        }
     }
 
     private void displayProfileForUser() {
