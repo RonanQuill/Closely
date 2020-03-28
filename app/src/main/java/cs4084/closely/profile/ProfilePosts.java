@@ -3,12 +3,18 @@ package cs4084.closely.profile;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cs4084.closely.R;
+import cs4084.closely.post.Post;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,8 +31,16 @@ public class ProfilePosts extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ProfilePostsRecyclerViewAdapter profilePostsRecyclerViewAdapter;
+    private RecyclerView postsRecyclerView;
+    private List<Post> posts;
+
     public ProfilePosts() {
         // Required empty public constructor
+    }
+
+    public ProfilePosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     /**
@@ -44,6 +58,7 @@ public class ProfilePosts extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -61,5 +76,20 @@ public class ProfilePosts extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile_posts, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        profilePostsRecyclerViewAdapter = new ProfilePostsRecyclerViewAdapter(posts);
+
+        postsRecyclerView = (RecyclerView) view.findViewById(R.id.postsRecyclerView);
+        postsRecyclerView.setAdapter(profilePostsRecyclerViewAdapter);
+        postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    public void notifyDataSetChanged() {
+        profilePostsRecyclerViewAdapter.notifyDataSetChanged();
     }
 }
