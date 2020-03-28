@@ -10,16 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cs4084.closely.R;
 
 public class BlogRecyclerViewAdapter extends RecyclerView.Adapter<BlogRecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "BlogRecyclerViewAdapter";
 
-    private ArrayList<Blog> mBlogs;
+    private List<Blog> mBlogs;
     private Context context;
 
-    public BlogRecyclerViewAdapter(ArrayList<Blog> blogs, Context context) {
+    public BlogRecyclerViewAdapter(List<Blog> blogs, Context context) {
         mBlogs = blogs;
         this.context = context;
     }

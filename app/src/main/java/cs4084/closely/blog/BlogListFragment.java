@@ -15,18 +15,23 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cs4084.closely.R;
+import cs4084.closely.user.User;
 
 
 public class BlogListFragment extends Fragment {
     private static final String TAG = "MainActivity";
-    ArrayList<Blog> blogs = new ArrayList<>();
+
+    List<Blog> blogs = new ArrayList<>();
+
     BlogRecyclerViewAdapter adapter;
 
     @Override
@@ -35,7 +40,8 @@ public class BlogListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blog_list, container, false);
 //        getPersonalBlogs();
-        fillBlogs();
+ //       fillBlogs();
+        getConnectionsBlogs();
         initRecyclerView(view);
         return view;
     }
@@ -70,27 +76,41 @@ public class BlogListFragment extends Fragment {
 
     }
 
-    // TODO change query to search users connections IDs
-    private void getConnectionsBlogs(final View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void getConnectionsBlogs() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        CollectionReference blogsCollectionsRef = db.collection("blogs");
-        blogsCollectionsRef
-                .whereEqualTo("userID", auth.getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: Successful connection to firestore");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, "Snapshot: blog created");
-                                Blog blog = document.toObject(Blog.class);
-                                blogs.add(blog);
-                            }
-                        }
+
+        String userID = auth.getCurrentUser().getUid();
+
+        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    if (document.exists()) {
+                        User user = document.toObject(User.class);
+
+                        CollectionReference blogsCollectionsRef = db.collection("blogs");
+                        blogsCollectionsRef
+                                .whereIn("userID", user.getConnections())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                blogs.add(document.toObject(Blog.class));
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                });
                     }
-                });
+                }
+            }
+        });
+
+
         Log.d(TAG, "getBlogs: Number of blogs: " + blogs.size());
     }
 
@@ -112,6 +132,7 @@ public class BlogListFragment extends Fragment {
                     }
                 });
     }
+
     private void fillBlogs() {
         blogs.add(new Blog("We're", "ho", "lets", "go", ""));
         blogs.add(new Blog("no", "ho", "lets", "go", ""));
