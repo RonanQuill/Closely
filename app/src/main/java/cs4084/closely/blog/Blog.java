@@ -1,4 +1,4 @@
-package cs4084.closely;
+package cs4084.closely.blog;
 
 import androidx.annotation.NonNull;
 

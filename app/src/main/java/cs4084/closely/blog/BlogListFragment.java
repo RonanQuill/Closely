@@ -1,4 +1,4 @@
-package cs4084.closely;
+package cs4084.closely.blog;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +20,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import cs4084.closely.R;
 
 
 public class BlogListFragment extends Fragment {

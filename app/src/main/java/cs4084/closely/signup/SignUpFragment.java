@@ -1,4 +1,4 @@
-package cs4084.closely;
+package cs4084.closely.signup;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import cs4084.closely.R;
 
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {

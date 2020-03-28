@@ -25,15 +25,17 @@ import java.util.List;
 import cs4084.closely.R;
 import cs4084.closely.connection.Connection;
 import cs4084.closely.post.Post;
+import cs4084.closely.profile.connections.ProfileConnectionsFragment;
+import cs4084.closely.profile.posts.ProfilePostsFragment;
 import cs4084.closely.user.User;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Profile#newInstance} factory method to
+ * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Profile extends Fragment {
+public class ProfileFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,10 +57,10 @@ public class Profile extends Fragment {
     private List<Post> posts = new ArrayList<>();
     private List<Connection> connections = new ArrayList<>();
 
-    private ProfilePosts profilePostsFragment;
-    private ProfileConnections profileConnectionsFragment;
+    private ProfilePostsFragment profilePostsFragment;
+    private ProfileConnectionsFragment profileConnectionsFragment;
 
-    public Profile() {
+    public ProfileFragment() {
         // Required empty public constructor
     }
 
@@ -71,8 +73,8 @@ public class Profile extends Fragment {
      * @return A new instance of fragment Profile.
      */
     // TODO: Rename and change types and number of parameters
-    public static Profile newInstance(String param1, String param2) {
-        Profile fragment = new Profile();
+    public static ProfileFragment newInstance(String param1, String param2) {
+        ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -108,8 +110,8 @@ public class Profile extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
-        profilePostsFragment = new ProfilePosts(posts);
-        profileConnectionsFragment = new ProfileConnections(connections);
+        profilePostsFragment = new ProfilePostsFragment(posts);
+        profileConnectionsFragment = new ProfileConnectionsFragment(connections);
 
         ProfileViewPagerAdapter profileViewPagerAdapter = new ProfileViewPagerAdapter(getFragmentManager());
         profileViewPagerAdapter.addFragment(profilePostsFragment, "Posts");

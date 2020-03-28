@@ -1,4 +1,4 @@
-package cs4084.closely;
+package cs4084.closely.signin;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import cs4084.closely.R;
 
 
 public class SignInFragment extends Fragment implements View.OnClickListener {

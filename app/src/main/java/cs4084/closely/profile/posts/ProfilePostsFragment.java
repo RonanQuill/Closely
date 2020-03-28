@@ -1,4 +1,4 @@
-package cs4084.closely.profile;
+package cs4084.closely.profile.posts;
 
 import android.os.Bundle;
 
@@ -10,18 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cs4084.closely.R;
-import cs4084.closely.connection.Connection;
+import cs4084.closely.post.Post;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileConnections#newInstance} factory method to
+ * Use the {@link ProfilePostsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileConnections extends Fragment {
+public class ProfilePostsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,16 +30,16 @@ public class ProfileConnections extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private ProfileConnectionsRecyclerViewAdapter profileConnectionsRecyclerViewAdapter;
-    private RecyclerView connectionsRecyclerView;
-    private List<Connection> connectionList;
+    private ProfilePostsRecyclerViewAdapter profilePostsRecyclerViewAdapter;
+    private RecyclerView postsRecyclerView;
+    private List<Post> posts;
 
-    public ProfileConnections() {
+    public ProfilePostsFragment() {
         // Required empty public constructor
     }
 
-    public ProfileConnections(List<Connection> connectionList) {
-        this.connectionList = connectionList;
+    public ProfilePostsFragment(List<Post> posts) {
+        this.posts = posts;
     }
 
     /**
@@ -49,15 +48,16 @@ public class ProfileConnections extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileConnections.
+     * @return A new instance of fragment ProfilePosts.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileConnections newInstance(String param1, String param2) {
-        ProfileConnections fragment = new ProfileConnections();
+    public static ProfilePostsFragment newInstance(String param1, String param2) {
+        ProfilePostsFragment fragment = new ProfilePostsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -74,21 +74,21 @@ public class ProfileConnections extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_connections, container, false);
+        return inflater.inflate(R.layout.fragment_profile_posts, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        profileConnectionsRecyclerViewAdapter = new ProfileConnectionsRecyclerViewAdapter(connectionList);
+        profilePostsRecyclerViewAdapter = new ProfilePostsRecyclerViewAdapter(posts);
 
-        connectionsRecyclerView = (RecyclerView) view.findViewById(R.id.connectionsRecyclerView);
-        connectionsRecyclerView.setAdapter(profileConnectionsRecyclerViewAdapter);
-        connectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        postsRecyclerView = (RecyclerView) view.findViewById(R.id.postsRecyclerView);
+        postsRecyclerView.setAdapter(profilePostsRecyclerViewAdapter);
+        postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     public void notifyDataSetChanged() {
-        profileConnectionsRecyclerViewAdapter.notifyDataSetChanged();
+        profilePostsRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

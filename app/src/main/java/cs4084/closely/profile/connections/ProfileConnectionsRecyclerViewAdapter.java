@@ -1,4 +1,4 @@
-package cs4084.closely.profile;
+package cs4084.closely.profile.connections;
 
 import android.util.Log;
 import android.view.LayoutInflater;

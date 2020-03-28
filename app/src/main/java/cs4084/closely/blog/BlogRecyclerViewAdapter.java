@@ -1,4 +1,4 @@
-package cs4084.closely;
+package cs4084.closely.blog;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import cs4084.closely.R;
 
 public class BlogRecyclerViewAdapter extends RecyclerView.Adapter<BlogRecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "BlogRecyclerViewAdapter";

@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <fragment
-    android:name="cs4084.closely.profile.Profile"
+    android:name="cs4084.closely.profile.ProfileFragment"
     android:id="@+id/profileFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
