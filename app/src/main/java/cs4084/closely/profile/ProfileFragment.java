@@ -134,7 +134,7 @@ public class ProfileFragment extends Fragment {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     if (document.exists()) {
-                        user = new User(document.getData());
+                        user = document.toObject(User.class);
                         displayProfileForUser();
                     }
                 }
@@ -150,7 +150,7 @@ public class ProfileFragment extends Fragment {
                 if(task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     for(QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        posts.add(new Blog(documentSnapshot.getData()));
+                        posts.add(documentSnapshot.toObject(Blog.class));
                     }
 
                     displayPostsForUser();
@@ -171,7 +171,7 @@ public class ProfileFragment extends Fragment {
                     if (task.isSuccessful()) {
                         QuerySnapshot querySnapshot = task.getResult();
                         for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                            connections.add(new Connection(documentSnapshot.getData()));
+                            connections.add(documentSnapshot.toObject(Connection.class));
                         }
 
                         profileConnectionsFragment.notifyDataSetChanged();

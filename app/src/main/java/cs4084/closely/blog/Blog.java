@@ -12,13 +12,7 @@ public class Blog {
     private String userID;
     private Timestamp datePosted;
 
-    public Blog(Map<String, Object> data) {
-        this.author = data.get("author").toString();
-        this.title = data.get("title").toString();
-        this.subtitle = data.get("subtitle").toString();
-        this.body = data.get("body").toString();
-        this.userID = data.get("userID").toString();
-        this.datePosted = (Timestamp)data.get("datePosted");
+    public Blog() {
     }
 
     public Blog(String title, String subtitle, String body, String author, String userID) {

@@ -22,13 +22,6 @@ public class User {
     private String bio;
     private List<String> connections;
 
-    public User(Map<String, Object> data) {
-        this.userID = data.get("userID").toString();
-        this.username = data.get("username").toString();
-        this.bio = data.get("bio").toString();
-        this.connections = (List<String>)data.get("connections");
-    }
-
     public String getUserID() {
         return userID;
     }
