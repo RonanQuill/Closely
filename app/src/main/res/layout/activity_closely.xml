@@ -7,7 +7,7 @@
     tools:context=".Closely">
 
     <fragment
-        class="cs4084.closely.profile.ProfileFragment"
+        class="cs4084.closely.navigation.NavigationFragment"
         android:id="@+id/profileFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
