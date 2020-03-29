@@ -3,12 +3,12 @@ package cs4084.closely.profile;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileViewPagerAdapter extends FragmentPagerAdapter {
+public class ProfileViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentTitles = new ArrayList<>();
@@ -26,11 +26,6 @@ public class ProfileViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return fragmentTitles.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
     }
 
     @Override

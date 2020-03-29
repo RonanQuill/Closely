@@ -1,14 +1,16 @@
 package cs4084.closely.welcome;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import cs4084.closely.R;
 
@@ -65,7 +67,12 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_welcome, container, false);
+        View v = inflater.inflate(R.layout.fragment_welcome, container, false);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            NavHostFragment.findNavController(this).navigate(R.id.action_welcomeFragment_to_navigationFragment);
+        }
+        return v;
     }
 
     @Override
