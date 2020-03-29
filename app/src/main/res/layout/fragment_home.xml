@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.homeFragment" >
+    tools:context=".home.HomeFragment" >
 
     <TextView
         android:id="@+id/homeText"
@@ -30,5 +30,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@null" />
+        app:srcCompat="@null"
+        tools:srcCompat="@null" />
 </androidx.constraintlayout.widget.ConstraintLayout>

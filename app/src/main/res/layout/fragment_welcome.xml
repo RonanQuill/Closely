@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".welcome.welcomeFragment">
+    tools:context=".welcome.WelcomeFragment">
 
     <Button
         android:id="@+id/signUpButton"
@@ -57,5 +57,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@null" />
+        app:srcCompat="@null"
+        tools:srcCompat="@null" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import cs4084.closely.R;
 import cs4084.closely.blog.BlogListFragment;
 import cs4084.closely.blog.PostFragment;
+import cs4084.closely.home.HomeFragment;
 import cs4084.closely.profile.ProfileFragment;
 
 /**
@@ -92,8 +93,8 @@ public class NavigationFragment extends Fragment {
                         break;
 
                     case R.id.add_connection:
-                        throw new NullPointerException("Fragment not implemented");
-                        //break;
+                        selectedFragment = new HomeFragment();
+                        break;
 
                     case R.id.profile:
                         selectedFragment = new ProfileFragment();
