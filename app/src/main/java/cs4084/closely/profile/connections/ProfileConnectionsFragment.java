@@ -1,35 +1,23 @@
 package cs4084.closely.profile.connections;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import cs4084.closely.R;
 import cs4084.closely.connection.Connection;
+import cs4084.closely.profile.ProfileFragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileConnectionsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ProfileConnectionsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+public class ProfileConnectionsFragment extends Fragment implements ProfileConnectionsRecyclerViewAdapter.OnConnectionListener {
     private ProfileConnectionsRecyclerViewAdapter profileConnectionsRecyclerViewAdapter;
     private RecyclerView connectionsRecyclerView;
     private List<Connection> connectionList;
@@ -42,31 +30,10 @@ public class ProfileConnectionsFragment extends Fragment {
         this.connectionList = connectionList;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileConnections.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileConnectionsFragment newInstance(String param1, String param2) {
-        ProfileConnectionsFragment fragment = new ProfileConnectionsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -80,7 +47,7 @@ public class ProfileConnectionsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        profileConnectionsRecyclerViewAdapter = new ProfileConnectionsRecyclerViewAdapter(connectionList);
+        profileConnectionsRecyclerViewAdapter = new ProfileConnectionsRecyclerViewAdapter(connectionList, this);
 
         connectionsRecyclerView = (RecyclerView) view.findViewById(R.id.connectionsRecyclerView);
         connectionsRecyclerView.setAdapter(profileConnectionsRecyclerViewAdapter);
@@ -89,5 +56,16 @@ public class ProfileConnectionsFragment extends Fragment {
 
     public void notifyDataSetChanged() {
         profileConnectionsRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onConnectionClick(int position) {
+        Connection connection = connectionList.get(position);
+        Bundle connectionBundle = new Bundle();
+        connectionBundle.putParcelable("connection", connection);
+        FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
+        ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.setArguments(connectionBundle);
+        t.replace(R.id.nagivationDisplay, profileFragment).commit();
     }
 }

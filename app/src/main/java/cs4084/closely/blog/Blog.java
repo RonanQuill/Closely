@@ -1,10 +1,11 @@
 package cs4084.closely.blog;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 
-import java.util.Map;
-
-public class Blog {
+public class Blog implements Parcelable {
     private String title;
     private String subtitle;
     private String body;
@@ -21,6 +22,14 @@ public class Blog {
         this.body = body;
         this.author = author;
         this.userID = userID;
+    }
+
+    public Blog(Parcel parcel) {
+        title = parcel.readString();
+        subtitle = parcel.readString();
+        body = parcel.readString();
+        author = parcel.readString();
+        userID = parcel.readString();
     }
 
     public String getTitle() {
@@ -51,4 +60,29 @@ public class Blog {
         return title + ", " + author + "\n";
     }
 
+
+    public static final Parcelable.Creator<Blog> CREATOR = new Parcelable.Creator<Blog>() {
+        public Blog createFromParcel(Parcel in) {
+            return new Blog(in);
+        }
+
+        @Override
+        public Blog[] newArray(int size) {
+            return new Blog[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(subtitle);
+        dest.writeString(body);
+        dest.writeString(author);
+        dest.writeString(userID);
+    }
 }

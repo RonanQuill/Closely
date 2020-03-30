@@ -68,10 +68,10 @@ public class WelcomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_welcome, container, false);
-        /*FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             NavHostFragment.findNavController(this).navigate(R.id.action_welcomeFragment_to_navigationFragment);
-        }*/
+        }
         return v;
     }
 

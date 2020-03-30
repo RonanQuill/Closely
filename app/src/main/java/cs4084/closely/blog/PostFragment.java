@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import cs4084.closely.R;
-import cs4084.closely.blog.Blog;
 
 
 public class PostFragment extends Fragment implements View.OnClickListener {
@@ -62,6 +61,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                 postBlog();
         }
     }
+
     private String getUsername () {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
          final ArrayList<String> userIDlist = new ArrayList<String>();

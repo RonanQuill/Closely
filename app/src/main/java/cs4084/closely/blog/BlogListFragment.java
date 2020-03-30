@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +29,7 @@ import cs4084.closely.R;
 import cs4084.closely.user.User;
 
 
-public class BlogListFragment extends Fragment {
+public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapter.OnBlogListener {
     private static final String TAG = "MainActivity";
 
     List<Blog> blogs = new ArrayList<>();
@@ -43,7 +44,7 @@ public class BlogListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_blog_list, container, false);
         getPersonalBlogs();
  //       fillBlogs();
-        getConnectionsBlogs();
+//        getConnectionsBlogs();
         initRecyclerView(view);
         return view;
     }
@@ -65,7 +66,7 @@ public class BlogListFragment extends Fragment {
 
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.blog_recycler_view);
-        adapter = new BlogRecyclerViewAdapter(blogs, getContext());
+        adapter = new BlogRecyclerViewAdapter(blogs, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -164,5 +165,16 @@ public class BlogListFragment extends Fragment {
         blogs.add(new Blog("so", "ho", "lets", "go", ""));
         blogs.add(new Blog("do", "ho", "lets", "go", ""));
         blogs.add(new Blog("I", "ho", "lets", "go", ""));
+    }
+
+    @Override
+    public void onBlogClick(int position) {
+        Blog blog = blogs.get(position);
+        Bundle blogBundle = new Bundle();
+        blogBundle.putParcelable("blog", blog);
+        FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
+        ViewBlogFragment viewBlogFragment = new ViewBlogFragment();
+        viewBlogFragment.setArguments(blogBundle);
+        t.replace(R.id.nagivationDisplay, viewBlogFragment).commit();
     }
 }
