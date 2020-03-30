@@ -1,40 +1,35 @@
 package cs4084.closely.profile;
 
-import androidx.annotation.Nullable;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileViewPagerAdapter extends FragmentStatePagerAdapter {
-
+public class ProfileViewPagerAdapter extends FragmentStateAdapter {
+    private static final String TAG = "ProfileViewPagerAdapter";
     private final List<Fragment> fragments = new ArrayList<>();
-    private final List<String> fragmentTitles = new ArrayList<>();
 
-    public ProfileViewPagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
+    public ProfileViewPagerAdapter(Fragment fa) {
+        super(fa);
     }
 
+    @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
+        Log.d(TAG, "createFragment: " + position);
         return fragments.get(position);
     }
 
-    @Nullable
     @Override
-    public CharSequence getPageTitle(int position) {
-        return fragmentTitles.get(position);
+    public int getItemCount() {
+        return fragments.size();
     }
 
-    @Override
-    public int getCount() {
-        return fragmentTitles.size();
-    }
-
-    public void addFragment(Fragment fragment, String title) {
+    public void addFragment(Fragment fragment) {
         fragments.add(fragment);
-        fragmentTitles.add(title);
     }
 }

@@ -8,11 +8,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +35,7 @@ import cs4084.closely.user.User;
 public class ProfileFragment extends Fragment {
 
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private ViewPager2 viewPager2;
 
     private TextView usernameTextView;
     private TextView bioTextView;
@@ -79,18 +80,20 @@ public class ProfileFragment extends Fragment {
         numberOfPostsTextView = view.findViewById(R.id.numberOfPostsTextView);
         memberSinceTextView = view.findViewById(R.id.memberSinceTextView);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager2 = view.findViewById(R.id.viewPager);
 
         profilePostsFragment = new ProfilePostsFragment(posts);
         profileConnectionsFragment = new ProfileConnectionsFragment(connections);
 
-        ProfileViewPagerAdapter profileViewPagerAdapter = new ProfileViewPagerAdapter(getFragmentManager());
-        profileViewPagerAdapter.addFragment(profilePostsFragment, "Posts");
-        profileViewPagerAdapter.addFragment(profileConnectionsFragment, "Connections");
+        ProfileViewPagerAdapter profileViewPagerAdapter = new ProfileViewPagerAdapter(this);
+        profileViewPagerAdapter.addFragment(profilePostsFragment);
+        profileViewPagerAdapter.addFragment(profileConnectionsFragment);
 
-        viewPager.setAdapter(profileViewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager2.setAdapter(profileViewPagerAdapter);
+
+
 
 
         loadAndDisplayUserProfile(userID);
@@ -100,6 +103,14 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final String[] titles = new String[]{"Pos", "Connection"};
+        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(titles[position]);
+            }
+        }).attach();
 
     }
 
