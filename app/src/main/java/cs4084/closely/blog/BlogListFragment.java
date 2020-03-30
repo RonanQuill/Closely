@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,8 +57,9 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
         createBlogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nagivationDisplay, new PostFragment()).commit();
+                Navigation.findNavController(getView()).navigate(
+                        R.id.action_blogListFragment_to_postFragment
+                );
             }
         });
 
@@ -172,9 +173,10 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
         Blog blog = blogs.get(position);
         Bundle blogBundle = new Bundle();
         blogBundle.putParcelable("blog", blog);
-        FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
-        ViewBlogFragment viewBlogFragment = new ViewBlogFragment();
-        viewBlogFragment.setArguments(blogBundle);
-        t.replace(R.id.nagivationDisplay, viewBlogFragment).commit();
+
+        Navigation.findNavController(getView()).navigate(
+                R.id.action_blogListFragment_to_viewBlogFragment,
+                blogBundle
+        );
     }
 }

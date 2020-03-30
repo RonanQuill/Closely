@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/all_blogs"
+        android:id="@+id/blogListFragment"
         android:icon="@null"
         android:title="Blogs" />
 
     <item
-        android:id="@+id/add_connection"
+        android:id="@+id/homeFragment"
         android:icon="@null"
         android:title="Add" />
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/profileFragment"
         android:icon="@null"
         android:title="Profile" />
 </menu>

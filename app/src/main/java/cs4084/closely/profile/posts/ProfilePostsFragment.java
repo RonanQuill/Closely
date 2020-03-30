@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,7 +15,6 @@ import java.util.List;
 
 import cs4084.closely.R;
 import cs4084.closely.blog.Blog;
-import cs4084.closely.blog.ViewBlogFragment;
 
 
 public class ProfilePostsFragment extends Fragment implements ProfilePostsRecyclerViewAdapter.OnBlogListener {
@@ -36,39 +35,40 @@ public class ProfilePostsFragment extends Fragment implements ProfilePostsRecycl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+        Log.d(TAG, "onCreate: " + posts.size());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_posts, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+        Log.d(TAG, "onCreateView: Profile Post");
+        View view = inflater.inflate(R.layout.fragment_profile_posts, container, false);
         profilePostsRecyclerViewAdapter = new ProfilePostsRecyclerViewAdapter(posts, this);
 
         postsRecyclerView = (RecyclerView) view.findViewById(R.id.postsRecyclerView);
         postsRecyclerView.setAdapter(profilePostsRecyclerViewAdapter);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        return view;
     }
 
     public void notifyDataSetChanged() {
-        profilePostsRecyclerViewAdapter.notifyDataSetChanged();
+        if (profilePostsRecyclerViewAdapter != null) {
+            profilePostsRecyclerViewAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onBlogClick(int position) {
-        Log.d(TAG, "onBlogClick: Clicked the posts list");
+
         Blog blog = posts.get(position);
         Bundle blogBundle = new Bundle();
         blogBundle.putParcelable("blog", blog);
-        FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
-        ViewBlogFragment viewBlogFragment = new ViewBlogFragment();
-        viewBlogFragment.setArguments(blogBundle);
-        t.replace(R.id.nagivationDisplay, viewBlogFragment).commit();
+
+        Navigation.findNavController(getView()).navigate(
+                R.id.action_profileFragment_to_viewBlogFragment,
+                blogBundle
+        );
     }
 }
