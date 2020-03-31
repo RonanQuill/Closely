@@ -11,14 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -30,9 +31,13 @@ import cs4084.closely.user.User;
 
 
 public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapter.OnBlogListener {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "BlogListFragment";
 
-    List<Blog> blogs = new ArrayList<>();
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    private List<Blog> blogs = new ArrayList<>();
+    private User currentUser;
+    private DocumentSnapshot lastQueriedDocument;
 
     BlogRecyclerViewAdapter adapter;
     FloatingActionButton createBlogButton;
@@ -42,10 +47,18 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blog_list, container, false);
-        getPersonalBlogs();
- //       fillBlogs();
-//        getConnectionsBlogs();
         initRecyclerView(view);
+        getBlogs();
+
+        swipeRefreshLayout = view.findViewById(R.id.view_blog_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d(TAG, "onRefresh: Refreshing");
+                getBlogs();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view;
     }
 
@@ -72,100 +85,25 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void getPersonalBlogs() {
+    private void getBlogs() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        CollectionReference blogsCollectionsRef = db.collection("blogs");
-        blogsCollectionsRef
-                .whereEqualTo("userID", auth.getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete: Successful connection to firestore");
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Blog blog = document.toObject(Blog.class);
-                        blogs.add(blog);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-    }
-
-    private void getConnectionsBlogs() {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-
         String userID = auth.getCurrentUser().getUid();
 
-        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                    if (document.exists()) {
-                        User user = document.toObject(User.class);
-
-                        CollectionReference blogsCollectionsRef = db.collection("blogs");
-                        blogsCollectionsRef
-                                .whereIn("userID", user.getConnections())
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                blogs.add(document.toObject(Blog.class));
-                                            }
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                });
-                    }
-                }
-            }
-        });
-
-
-        Log.d(TAG, "getBlogs: Number of blogs: " + blogs.size());
-    }
-
-    private void getAllBlogs(View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference blogsCollectionsRef = db.collection("blogs");
-        blogsCollectionsRef.get()
+        db.collection("users").whereEqualTo("userID", userID)
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: Successful connection to firestore");
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Blog blog = document.toObject(Blog.class);
-                                blogs.add(blog);
+                                currentUser = document.toObject(User.class);
+                                Log.d(TAG, "onComplete: User found");
                             }
-                            adapter.notifyDataSetChanged();
+                            getConnectionBlogs();
                         }
                     }
                 });
-    }
-
-    private void fillBlogs() {
-        blogs.add(new Blog("We're", "ho", "lets", "go", ""));
-        blogs.add(new Blog("no", "ho", "lets", "go", ""));
-        blogs.add(new Blog("strangers", "ho", "lets", "go", ""));
-        blogs.add(new Blog("to", "ho", "lets", "go", ""));
-        blogs.add(new Blog("love,", "ho", "lets", "go", ""));
-        blogs.add(new Blog("you", "ho", "lets", "go", ""));
-        blogs.add(new Blog("know", "ho", "lets", "go", ""));
-        blogs.add(new Blog("the", "ho", "lets", "go", ""));
-        blogs.add(new Blog("rules", "ho", "lets", "go", ""));
-        blogs.add(new Blog("and", "ho", "lets", "go", ""));
-        blogs.add(new Blog("so", "ho", "lets", "go", ""));
-        blogs.add(new Blog("do", "ho", "lets", "go", ""));
-        blogs.add(new Blog("I", "ho", "lets", "go", ""));
     }
 
     @Override
@@ -178,5 +116,40 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
                 R.id.action_blogListFragment_to_viewBlogFragment,
                 blogBundle
         );
+    }
+
+    private void getConnectionBlogs() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query;
+        if (currentUser != null) {
+            if (lastQueriedDocument != null) {
+                Log.d(TAG, "starting after: " + lastQueriedDocument.toObject(Blog.class));
+                query = db.collection("blogs")
+                        .whereIn("userID", currentUser.getConnections())
+                        .startAfter(lastQueriedDocument);
+            } else {
+                query = db.collection("blogs").whereIn("userID",
+                        currentUser.getConnections());
+            }
+
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            blogs.add(document.toObject(Blog.class));
+                            Log.d(TAG, "onComplete: " + document.toObject(Blog.class));
+                        }
+
+                        if (task.getResult().size() != 0) {
+                            lastQueriedDocument = task.getResult().getDocuments()
+                                    .get(task.getResult().size() - 1);
+                        }
+                        adapter.notifyDataSetChanged();
+
+                    }
+                }
+            });
+        }
     }
 }
