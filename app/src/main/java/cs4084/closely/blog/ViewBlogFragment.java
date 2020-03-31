@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +21,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cs4084.closely.R;
+import cs4084.closely.user.User;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -87,6 +90,8 @@ public class ViewBlogFragment extends Fragment {
                                 Log.d(TAG, "onComplete: User found");
                             }
                             postComment();
+                            Toast.makeText(getActivity(), "Comment posted",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -95,8 +100,10 @@ public class ViewBlogFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference washingtonRef = db.collection("blogs").document("6sYh3Sa69ccVmBDpYMSd");
         TextView content = getView().findViewById(R.id.view_blog_comment_content);
+        HashMap<String, String> comments = new HashMap<String, String>();
+        comments.put(currentUser.getUsername(), content.getText().toString());
         washingtonRef
-                .update("author",currentUser)
+                .update("comments",comments)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
