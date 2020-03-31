@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.firebase.Timestamp;
 
+import java.util.HashMap;
+
 public class Blog implements Parcelable {
     private String title;
     private String subtitle;
@@ -12,11 +14,12 @@ public class Blog implements Parcelable {
     private String author;
     private String userID;
     private Timestamp datePosted;
+    HashMap<String, String> comments = new HashMap<String, String>();
 
     public Blog() {
     }
 
-    public Blog(String title, String subtitle, String body, String author, String userID) {
+    public Blog(String title, String subtitle, String body, String author, String userID,HashMap<String, String> comments) {
         this.title = title;
         this.subtitle = subtitle;
         this.body = body;
@@ -30,6 +33,13 @@ public class Blog implements Parcelable {
         body = parcel.readString();
         author = parcel.readString();
         userID = parcel.readString();
+    }
+    public HashMap<String, String> getComments() {
+        return comments;
+    }
+
+    public void setComments(HashMap<String, String> comments) {
+        this.comments = comments;
     }
 
     public String getTitle() {

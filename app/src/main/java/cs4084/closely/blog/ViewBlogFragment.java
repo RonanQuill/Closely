@@ -1,21 +1,39 @@
 package cs4084.closely.blog;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
+
+import java.util.ArrayList;
 
 import cs4084.closely.R;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ViewBlogFragment extends Fragment {
     private Blog blog;
+    private User currentUser;
 
     public ViewBlogFragment() {
         // Required empty public constructor
@@ -39,6 +57,13 @@ public class ViewBlogFragment extends Fragment {
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
         TextView authorView = view.findViewById(R.id.view_blog_author);
         TextView bodyView = view.findViewById(R.id.view_blog_body);
+        Button postComment = view.findViewById(R.id.view_blog_add_comment);
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getUsername();
+            }
+        });
 
         if (blog != null) {
             titleView.setText(blog.getTitle());
@@ -48,4 +73,44 @@ public class ViewBlogFragment extends Fragment {
         }
         return view;
     }
+    private void getUsername () {
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").whereEqualTo("userID", userID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                currentUser = document.toObject(User.class);
+                                Log.d(TAG, "onComplete: User found");
+                            }
+                            postComment();
+                        }
+                    }
+                });
+    }
+    private void postComment() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference washingtonRef = db.collection("blogs").document("6sYh3Sa69ccVmBDpYMSd");
+        TextView content = getView().findViewById(R.id.view_blog_comment_content);
+        washingtonRef
+                .update("author",currentUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+
+    }
+
 }

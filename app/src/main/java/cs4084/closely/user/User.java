@@ -37,4 +37,5 @@ public class User {
     public List<String> getConnections() {
         return connections;
     }
+    public User(){}
 }

@@ -94,7 +94,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "postBlog: "+content.getText());
         Blog b = new Blog ( title .getText().toString(),
                 subtitle.getText().toString(),
-                content.getText().toString(), getUsername(),FirebaseAuth.getInstance().getCurrentUser().getUid() );
+                content.getText().toString(), getUsername(),FirebaseAuth.getInstance().getCurrentUser().getUid(),null );
             db.collection("blogs").add(b).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
