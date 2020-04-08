@@ -123,6 +123,7 @@ public class ProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     if (document.exists()) {
                         user = document.toObject(User.class);
+                        user.setDocumentID(document.getId());
                         displayProfileForUser();
                     }
                 }
