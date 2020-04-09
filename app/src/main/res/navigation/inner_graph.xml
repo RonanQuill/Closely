@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_profileFragment_to_viewBlogFragment"
             app:destination="@id/viewBlogFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/blogListFragment"
@@ -48,4 +51,9 @@
         android:name="cs4084.closely.blog.PostFragment"
         android:label="post_fragment"
         tools:layout="@layout/post_fragment" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="cs4084.closely.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>

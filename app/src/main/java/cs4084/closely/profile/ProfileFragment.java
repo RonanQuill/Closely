@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private TextView bioTextView;
     private TextView numberOfPostsTextView;
     private TextView memberSinceTextView;
+    private ImageButton editProfileButton;
 
     private String userID;
     private User user;
@@ -79,6 +82,7 @@ public class ProfileFragment extends Fragment {
         bioTextView = view.findViewById(R.id.bioTextView);
         numberOfPostsTextView = view.findViewById(R.id.numberOfPostsTextView);
         memberSinceTextView = view.findViewById(R.id.memberSinceTextView);
+        editProfileButton = view.findViewById(R.id.profile_edit_profile_btn);
 
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager);
@@ -112,6 +116,12 @@ public class ProfileFragment extends Fragment {
             }
         }).attach();
 
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.action_profileFragment_to_editProfileFragment);
+            }
+        });
     }
 
     private void loadAndDisplayUserProfile(String userID) {
