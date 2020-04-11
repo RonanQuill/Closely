@@ -10,6 +10,11 @@ public class User {
     private String documentID;
     private List<String> connections;
 
+    public User(String username, String bio) {
+        this.username = username;
+        this.bio = bio;
+    }
+
     public String getUserID() {
         return userID;
     }

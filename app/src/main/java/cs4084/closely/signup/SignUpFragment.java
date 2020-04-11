@@ -67,7 +67,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_SHORT).show();
 
-                            Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_navigationFragment);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("IsNewUser", true);
+                            Navigation.findNavController(getView())
+                                    .navigate(R.id.action_signUpFragment_to_editProfileFragment2, bundle);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

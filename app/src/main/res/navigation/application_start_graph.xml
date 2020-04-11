@@ -23,8 +23,8 @@
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
-            android:id="@+id/action_signUpFragment_to_navigationFragment"
-            app:destination="@id/navigationFragment" />
+            android:id="@+id/action_signUpFragment_to_editProfileFragment2"
+            app:destination="@id/editProfileFragment2" />
     </fragment>
     <fragment
         android:id="@+id/navigationFragment"
@@ -44,6 +44,19 @@
             app:destination="@id/signUpFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment2"
+        android:name="cs4084.closely.profile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile">
+        <argument
+            android:name="IsNewUser"
+            app:argType="boolean"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_editProfileFragment2_to_navigationFragment"
             app:destination="@id/navigationFragment" />
     </fragment>
 </navigation>

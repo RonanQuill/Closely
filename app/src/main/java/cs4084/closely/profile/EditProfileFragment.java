@@ -1,15 +1,18 @@
-package cs4084.closely;
+package cs4084.closely.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import cs4084.closely.R;
 import cs4084.closely.user.User;
 
 
@@ -30,10 +34,15 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private EditText editUsernameView;
     private Button applyButton;
 
+    private boolean isNewUser = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            isNewUser = bundle.getBoolean("IsNewUser");
+        }
     }
 
     @Override
@@ -44,9 +53,17 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         editBioView = v.findViewById(R.id.edit_profile_bio);
         editUsernameView = v.findViewById(R.id.edit_profile_username);
         applyButton = v.findViewById(R.id.edit_profile_apply_btn);
+        if (isNewUser) {
+            TextView editBioTextView = v.findViewById(R.id.edit_profile_bio_text);
+            TextView editUsernameTextView = v.findViewById(R.id.edit_profile_username_text);
+            editBioTextView.setText("Create Bio");
+            editUsernameTextView.setText("Create username");
+        }
         applyButton.setOnClickListener(this);
 
-        loadUser();
+        if (!isNewUser) {
+            loadUser();
+        }
         return v;
     }
 
@@ -73,12 +90,19 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.edit_profile_apply_btn) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            if (!editBioView.getText().toString().equals(user.getBio())) {
-                updateBio(db);
-            }
+            if (isNewUser) {
+                if (isValidUsernameAndBio()) {
+                    createNewUserProfile();
+                }
+            } else {
+                if (!editBioView.getText().toString().equals(user.getBio())) {
+                    updateBio(db);
+                }
 
-            if (!editUsernameView.getText().toString().equals(user.getUsername())) {
-                updateUsername(db);
+                if (!editUsernameView.getText().toString().equals(user.getUsername())) {
+                    updateUsername(db);
+
+                }
             }
         }
     }
@@ -99,6 +123,36 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getActivity(), "Username updated", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private boolean isValidUsernameAndBio() {
+        boolean isValidUser = true;
+        String username = editUsernameView.getText().toString();
+        String bio = editBioView.getText().toString();
+        bio = bio.trim();
+        username = username.trim();
+        if (username.length() < 3) {
+            isValidUser = false;
+            Toast.makeText(getActivity(), "Username is too short", Toast.LENGTH_SHORT).show();
+        }
+        if (bio.length() < 5) {
+            isValidUser = false;
+            Toast.makeText(getActivity(), "Bio is too short", Toast.LENGTH_SHORT).show();
+
+        }
+        return isValidUser;
+    }
+
+    private void createNewUserProfile() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        User newUser = new User(editUsernameView.getText().toString(), editBioView.getText().toString());
+        db.collection("users").add(newUser).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d("yeet", "onSuccess: created new user");
+                Navigation.findNavController(getView()).navigate(R.id.action_editProfileFragment2_to_navigationFragment);
             }
         });
     }

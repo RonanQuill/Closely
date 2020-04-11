@@ -53,7 +53,7 @@
         tools:layout="@layout/post_fragment" />
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="cs4084.closely.EditProfileFragment"
+        android:name="cs4084.closely.profile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
 </navigation>
