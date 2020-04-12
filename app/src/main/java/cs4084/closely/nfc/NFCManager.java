@@ -65,20 +65,18 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         // record 0 contains the MIME type, record 1 is the AAR, if present
         String userId = new String(message.getRecords()[NFC_USER_ID_ARRAY_INDEX].getPayload());
 
-        User loggedInUser = closely.getLoggedInUser();
+        final User loggedInUser = closely.getLoggedInUser();
 
         User.loadUser(userId, new User.OnLoaded() {
             @Override
             public void OnLoaded(User connectionRequestUser) {
-                showAddConnectionDialog(connectionRequestUser);
 
-                /*if(loggedInUser == null) {*/
+                if(loggedInUser == null) {
                 //Display that XY wants to connect but you must be logged in
-                //showLogInToAddConnectionDialog(userId);
-                /*} else {
-                    //Display XY wants to connect
-                    */
-                //}
+                    showLogInToAddConnectionDialog(connectionRequestUser);
+                } else {
+                    showAddConnectionDialog(connectionRequestUser);
+                }
             }
         });
 
@@ -93,6 +91,6 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
     }
 
     private void showLogInToAddConnectionDialog(User user) {
-        Toast.makeText(closely, "Log in to add connection", Toast.LENGTH_LONG).show();
+        Toast.makeText(closely, "Log in to add connections", Toast.LENGTH_LONG).show();
     }
 }
