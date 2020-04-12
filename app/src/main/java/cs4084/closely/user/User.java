@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -42,10 +43,10 @@ public class User {
     }
 
     private String documentID;
-    private String userID;
-    private String username;
-    private String bio;
-    private List<String> connections;
+    private String userID = "";
+    private String username = "";
+    private String bio = "";
+    private List<String> connections = new ArrayList<>();
 
     public User(){}
 

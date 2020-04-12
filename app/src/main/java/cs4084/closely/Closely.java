@@ -11,6 +11,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.ReentrantLock;
 
 import cs4084.closely.nfc.NFCManager;
 import cs4084.closely.user.User;
@@ -29,14 +34,16 @@ public class Closely extends AppCompatActivity  {
     }
 
     private void loadLoggedInUser() {
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        User.loadUser(userID, new User.OnLoaded() {
-            @Override
-            public void OnLoaded(User loadedUser) {
-                loggedInUser = loadedUser;
-            }
-        });
+            User.loadUser(userID, new User.OnLoaded() {
+                @Override
+                public void OnLoaded(User loadedUser) {
+                    loggedInUser = loadedUser;
+                }
+            });
+        }
     }
 
     @Override
@@ -50,6 +57,11 @@ public class Closely extends AppCompatActivity  {
     @Override
     public void onResume() {
         super.onResume();
+
+        if(loggedInUser == null) {
+            loadLoggedInUser();
+        }
+
         // Check to see that the Activity started due to an Android Beam
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
             nfcManager.receiveNfcMessage(getIntent());
