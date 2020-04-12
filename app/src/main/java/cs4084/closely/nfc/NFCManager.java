@@ -10,8 +10,10 @@ import android.nfc.NfcEvent;
 import android.os.Parcelable;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
+
 import cs4084.closely.Closely;
-import cs4084.closely.R;
+import cs4084.closely.acceptconnection.AcceptConnectionDialog;
 import cs4084.closely.user.User;
 
 import static android.nfc.NdefRecord.createMime;
@@ -19,32 +21,31 @@ import static android.nfc.NdefRecord.createMime;
 public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
 
     // record 0 contains the MIME type, record 1 is the AAR
-    private static int NFC_USER_ID_ARRAY_INDEX = 2;
+    private static int NFC_USER_ID_ARRAY_INDEX = 0;
 
     private NfcAdapter nfcAdapter;
-    private Activity activity;
+    private Closely closely;
 
-    public NFCManager(Context context, Activity activity) {
-        this.activity = activity;
+    public NFCManager(Context context, Closely closely) {
+        this.closely = closely;
 
         // Check for available NFC Adapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
         if (nfcAdapter == null) {
-            Toast.makeText(context, "NFC is not available", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "NFC is not available", Toast.LENGTH_LONG).show();
             return;
         } else {
-            Toast.makeText(context, "NFC is available", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "NFC is available", Toast.LENGTH_LONG).show();
         }
 
         // Register callback
-        nfcAdapter.setNdefPushMessageCallback(this, activity);
+        nfcAdapter.setNdefPushMessageCallback(this, closely);
     }
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        Closely closely = (Closely)activity;
-        User user = closely.getUser();
+        User user = closely.getLoggedInUser();
 
         String text = user.getUserID();
 
@@ -64,7 +65,26 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         // record 0 contains the MIME type, record 1 is the AAR, if present
         String userId = new String(message.getRecords()[NFC_USER_ID_ARRAY_INDEX].getPayload());
 
-        Closely closely = (Closely)activity;
-        closely.addConnectionToUser(userId);
+        User loggedInUser = closely.getLoggedInUser();
+        if(loggedInUser == null) {
+            //Display that XY wants to connect but you must be logged in
+            showLogInToAddConnectionDialog(userId);
+        } else {
+            //Displaty XY wants to connect
+            showAddConnectionDialog(userId);
+        }
+        /*
+        closely.addConnectionToUser(userId);*/
+        //Toast.makeText(context, "Event received", Toast.LENGTH_LONG).show();
+    }
+
+    private void showAddConnectionDialog(String userId) {
+        AcceptConnectionDialog acceptConnectionDialog = new AcceptConnectionDialog();
+        acceptConnectionDialog.setUserData(userId);
+        acceptConnectionDialog.show(closely.getSupportFragmentManager(), "connection");
+    }
+
+    private void showLogInToAddConnectionDialog(String userId) {
+        Toast.makeText(closely, "Log in to add connection", Toast.LENGTH_LONG).show();
     }
 }

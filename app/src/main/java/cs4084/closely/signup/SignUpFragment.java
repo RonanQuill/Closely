@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import cs4084.closely.Closely;
 import cs4084.closely.R;
 
 
@@ -66,6 +67,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_SHORT).show();
+
+                            Closely closely = (Closely)getActivity();
+                            closely.onLogin();
 
                             Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_navigationFragment);
                         } else {

@@ -1,59 +1,52 @@
 package cs4084.closely;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cs4084.closely.nfc.NFCManager;
 import cs4084.closely.user.User;
 
-import static android.nfc.NdefRecord.createMime;
-
 public class Closely extends AppCompatActivity  {
+
+    public interface PostLogInEvent {
+        public void action();
+    }
 
     NFCManager nfcManager;
 
-    User user;
+    User loggedInUser;
 
-    public void addConnectionToUser(String connectionsUserId) {
-        user.addConnection(connectionsUserId);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(user.getDocumentID()).update(user.toMap());
+    public void onLogin() {
+        loadLoggedInUser();
     }
 
-    public User getUser() {
-        return user;
+    public void addConnectionToUser(String connectionsUserId) {
+        loggedInUser.addConnection(connectionsUserId);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(loggedInUser.getDocumentID()).update(loggedInUser.toMap());
+    }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
 
     private void loadLoggedInUser() {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        User.loadUser(userID, new User.OnLoaded() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                    if (document.exists()) {
-                        user = document.toObject(User.class);
-                        user.setDocumentID(document.getId());
-                    }
-                }
+            public void OnLoaded(User loadedUser) {
+                loggedInUser = loadedUser;
             }
         });
     }
@@ -63,7 +56,6 @@ public class Closely extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_closely);
 
-        loadLoggedInUser();
         nfcManager = new NFCManager(this, this);
     }
 

@@ -18,6 +18,29 @@ import java.util.Map;
 
 public class User {
 
+    public interface OnLoaded
+    {
+        public void OnLoaded(User user);
+    }
+
+    public static void loadUser(String userID, final User.OnLoaded onLoaded) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    if (document.exists()) {
+                        User user = document.toObject(User.class);
+                        user.setDocumentID(document.getId());
+                        onLoaded.OnLoaded(user);
+                    }
+                }
+            }
+        });
+    }
+
     private String documentID;
     private String userID;
     private String username;
