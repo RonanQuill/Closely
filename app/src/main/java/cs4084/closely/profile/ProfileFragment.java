@@ -1,26 +1,39 @@
 package cs4084.closely.profile;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +45,7 @@ import cs4084.closely.profile.connections.ProfileConnectionsFragment;
 import cs4084.closely.profile.posts.ProfilePostsFragment;
 import cs4084.closely.user.User;
 
+import static android.app.Activity.RESULT_OK;
 
 
 public class ProfileFragment extends Fragment {
@@ -44,6 +58,7 @@ public class ProfileFragment extends Fragment {
     private TextView numberOfPostsTextView;
     private TextView memberSinceTextView;
     private ImageButton editProfileButton;
+    private ImageView profileImageView;
 
     private String userID;
     private User user;
@@ -98,6 +113,17 @@ public class ProfileFragment extends Fragment {
         viewPager2.setAdapter(profileViewPagerAdapter);
 
 
+        profileImageView = view.findViewById(R.id.profile_profile_img);
+        profileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                cameraIntent.setType("image/*");
+                if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivityForResult(cameraIntent, 1000);
+                }
+            }
+        });
 
 
         loadAndDisplayUserProfile(userID);
@@ -122,6 +148,8 @@ public class ProfileFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.action_profileFragment_to_editProfileFragment);
             }
         });
+
+
     }
 
     private void loadAndDisplayUserProfile(String userID) {
@@ -133,7 +161,9 @@ public class ProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     if (document.exists()) {
                         user = document.toObject(User.class);
+                        user.setDocumentID(document.getId());
                         displayProfileForUser();
+
                     }
                 }
             }
@@ -185,10 +215,70 @@ public class ProfileFragment extends Fragment {
 
         getPostsForUser();
         getConnectionsForUser();
+        user.setProfileURI("");
+        if (user.getProfileURI().equals("")) {
+            String imgRequest = "https://api.adorable.io/avatars/285/" + user.getUserID() + ".png";
+            Glide.with(getContext()).load(imgRequest)
+                    .into(profileImageView);
+        } else {
+            Glide.with(getContext()).load(user.getProfileURI())
+                    .into(profileImageView);
+        }
+
     }
 
     private void displayPostsForUser() {
         numberOfPostsTextView.setText("Number of Posts: " + posts.size());
         profilePostsFragment.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1000) {
+                Uri returnUri = data.getData();
+                profileImageView.setImageURI(returnUri);
+                saveToFirestore(returnUri);
+            }
+        }
+    }
+
+    private void saveToFirestore(Uri file) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        final StorageReference profileReference = storageRef.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        profileReference.putFile(file).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return profileReference.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Log.d("yeet", "onComplete: " + task.getResult().toString());
+                    //Save uri to user object
+                    updateUserProfileImage(task.getResult().toString());
+                }
+            }
+        });
+
+    }
+
+    private void updateUserProfileImage(String profileURI) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userReference = db.collection("users").document(user.getDocumentID());
+        userReference.update("profileURI", profileURI).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getActivity(), "Profile image updated", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

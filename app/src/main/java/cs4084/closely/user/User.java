@@ -8,6 +8,7 @@ public class User {
     private String username;
     private String bio;
     private String documentID;
+    private String profileURI;
     private List<String> connections;
 
     public User(String username, String bio) {
@@ -38,5 +39,14 @@ public class User {
     public List<String> getConnections() {
         return connections;
     }
+
+    public String getProfileURI() {
+        return profileURI;
+    }
+
+    public void setProfileURI(String profileURI) {
+        this.profileURI = profileURI;
+    }
+
     public User(){}
 }
