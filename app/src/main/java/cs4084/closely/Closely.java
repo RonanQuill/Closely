@@ -17,23 +17,11 @@ import cs4084.closely.user.User;
 
 public class Closely extends AppCompatActivity  {
 
-    public interface PostLogInEvent {
-        public void action();
-    }
-
     NFCManager nfcManager;
-
     User loggedInUser;
 
     public void onLogin() {
         loadLoggedInUser();
-    }
-
-    public void addConnectionToUser(String connectionsUserId) {
-        loggedInUser.addConnection(connectionsUserId);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(loggedInUser.getDocumentID()).update(loggedInUser.toMap());
     }
 
     public User getLoggedInUser() {

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import cs4084.closely.Closely;
 import cs4084.closely.R;
 import cs4084.closely.user.User;
 
@@ -24,7 +25,7 @@ import cs4084.closely.user.User;
  */
 public class AcceptConnectionDialog extends DialogFragment {
 
-    TextView messageText;
+    User connectionRequestUser;
 
     public AcceptConnectionDialog() {
         // Required empty public constructor
@@ -36,8 +37,11 @@ public class AcceptConnectionDialog extends DialogFragment {
      *
      * @return A new instance of fragment AcceptConnection.
      */
-    public static AcceptConnectionDialog newInstance() {
+    public static AcceptConnectionDialog newInstance(@NonNull User connectionRequestUser) {
         AcceptConnectionDialog fragment = new AcceptConnectionDialog();
+
+        fragment.connectionRequestUser = connectionRequestUser;
+
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -58,7 +62,6 @@ public class AcceptConnectionDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        messageText = view.findViewById(R.id.messageText);
     }
 
     @NonNull
@@ -68,13 +71,22 @@ public class AcceptConnectionDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
+        View dialogView = inflater.inflate(R.layout.fragment_accept_connection, null);
+
+        //setUserData();
+        final TextView messageText = dialogView.findViewById(R.id.messageText);
+        messageText.setText(connectionRequestUser.getUsername() + " wants to connect with you");
+
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.fragment_accept_connection, null))
+        builder.setView(dialogView)
                 .setPositiveButton(R.string.connection_dialog_accept, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // Connect the users
+                        Closely closely = (Closely)getActivity();
+                        User loggedInUser = closely.getLoggedInUser();
+                        loggedInUser.connectToUser(connectionRequestUser);
                     }
                 })
                 .setNegativeButton(R.string.connection_dialog_decline, new DialogInterface.OnClickListener() {
@@ -87,12 +99,4 @@ public class AcceptConnectionDialog extends DialogFragment {
         return builder.create();
     }
 
-    public void setUserData(String userId) {
-        User.loadUser(userId, new User.OnLoaded() {
-            @Override
-            public void OnLoaded(User user) {
-                messageText.setText(user.getUsername() + "wants to connect with you");
-            }
-        });
-    }
 }

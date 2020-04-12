@@ -73,8 +73,15 @@ public class User {
         return connections;
     }
 
-    public void addConnection(String userID) {
-        connections.add(userID);
+    public void connectToUser(User otherUser) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        this.connections.add(otherUser.getUserID());
+        db.collection("users").document(this.getDocumentID()).update(this.toMap());
+
+        otherUser.connections.add(this.getUserID());
+        db.collection("users").document(otherUser.getDocumentID()).update(otherUser.toMap());
     }
 
     public Map<String, Object> toMap() {

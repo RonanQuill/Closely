@@ -7,6 +7,24 @@
     android:background="#3E454C"
     tools:context=".signup.SignUpFragment">
 
+    <EditText
+        android:id="@+id/sign_up_username"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
+        android:background="#767676"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textEmailAddress"
+        android:paddingStart="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#B3B0B0"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/sign_up_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/sign_up_title"
         android:layout_width="wrap_content"
@@ -15,11 +33,12 @@
         android:text="Sign up"
         android:textColor="#FFFFFF"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/sign_up_email"
+        app:layout_constraintBottom_toTopOf="@+id/sign_up_username"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.345" />
+        app:layout_constraintVertical_bias="0.369" />
 
     <EditText
         android:id="@+id/sign_up_email"

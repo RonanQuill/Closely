@@ -19,14 +19,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Map;
 
 import cs4084.closely.Closely;
 import cs4084.closely.R;
+import cs4084.closely.user.User;
 
 
-public class SignUpFragment extends Fragment implements View.OnClickListener {
+public class SignUpFragment extends Fragment {
     private static final String TAG = "SignUpFragment";
 
+    private EditText usernameField;
     private EditText emailField;
     private EditText passwordField;
     private EditText confirmPasswordField;
@@ -44,17 +50,23 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        emailField = getView().findViewById(R.id.sign_up_email);
-        passwordField = getView().findViewById(R.id.sign_up_password);
-        confirmPasswordField = getView().findViewById(R.id.sign_up_pwd_confirm);
+        usernameField = view.findViewById(R.id.sign_up_username);
+        emailField =view.findViewById(R.id.sign_up_email);
+        passwordField = view.findViewById(R.id.sign_up_password);
+        confirmPasswordField = view.findViewById(R.id.sign_up_pwd_confirm);
 
-        signUpBtn = getView().findViewById(R.id.sign_up_btn);
-        signUpBtn.setOnClickListener(this);
+        signUpBtn = view.findViewById(R.id.sign_up_btn);
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAccount(emailField.getText().toString(), passwordField.getText().toString(), usernameField.getText().toString());
+            }
+        });
 
         auth = FirebaseAuth.getInstance();
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(String email, String password, final String username) {
         if (!validateForm()) {
             return;
         }
@@ -63,27 +75,49 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_SHORT).show();
 
-                            Closely closely = (Closely)getActivity();
-                            closely.onLogin();
+                        createProfile(username, auth.getCurrentUser().getUid());
 
-                            Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_navigationFragment);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        //Create entry in the
+                        Closely closely = (Closely)getActivity();
+                        closely.onLogin();
+
+                        Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_navigationFragment);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(getActivity(), "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
                     }
                 });
     }
 
+    private void createProfile(String username, String userId) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        CollectionReference users = database.collection("users");
+
+        User user = new User();
+        Map<String, Object> userMap = user.toMap();
+        userMap.put("username", username);
+        userMap.put("userID", userId);
+
+        users.document(username).set(userMap);
+    }
+
     private boolean validateForm() {
         boolean valid = true;
+
+        String username = usernameField.getText().toString();
+        if (TextUtils.isEmpty(username)) {
+            usernameField.setError("Username Required");
+            valid = false;
+        }
 
         String email = emailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
@@ -102,18 +136,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             confirmPasswordField.setError("Required");
             valid = false;
         } else if (!confirmedPassword.equals(password)) {
-            confirmPasswordField.setError("Passwords not the same");
+            confirmPasswordField.setError("Passwords do not match");
             valid = false;
         }
         return valid;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_up_btn:
-                createAccount(emailField.getText().toString(), passwordField.getText().toString());
-                break;
-        }
     }
 }

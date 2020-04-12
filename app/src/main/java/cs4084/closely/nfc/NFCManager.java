@@ -66,25 +66,33 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         String userId = new String(message.getRecords()[NFC_USER_ID_ARRAY_INDEX].getPayload());
 
         User loggedInUser = closely.getLoggedInUser();
-        if(loggedInUser == null) {
-            //Display that XY wants to connect but you must be logged in
-            showLogInToAddConnectionDialog(userId);
-        } else {
-            //Display XY wants to connect
-            showAddConnectionDialog(userId);
-        }
+
+        User.loadUser(userId, new User.OnLoaded() {
+            @Override
+            public void OnLoaded(User connectionRequestUser) {
+                showAddConnectionDialog(connectionRequestUser);
+
+                /*if(loggedInUser == null) {*/
+                //Display that XY wants to connect but you must be logged in
+                //showLogInToAddConnectionDialog(userId);
+                /*} else {
+                    //Display XY wants to connect
+                    */
+                //}
+            }
+        });
+
         /*
         closely.addConnectionToUser(userId);*/
         //Toast.makeText(context, "Event received", Toast.LENGTH_LONG).show();
     }
 
-    private void showAddConnectionDialog(String userId) {
-        AcceptConnectionDialog acceptConnectionDialog = new AcceptConnectionDialog();
-        acceptConnectionDialog.setUserData(userId);
+    private void showAddConnectionDialog(User user) {
+        AcceptConnectionDialog acceptConnectionDialog = AcceptConnectionDialog.newInstance(user);
         acceptConnectionDialog.show(closely.getSupportFragmentManager(), "connection");
     }
 
-    private void showLogInToAddConnectionDialog(String userId) {
+    private void showLogInToAddConnectionDialog(User user) {
         Toast.makeText(closely, "Log in to add connection", Toast.LENGTH_LONG).show();
     }
 }
