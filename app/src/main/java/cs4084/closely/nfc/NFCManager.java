@@ -70,7 +70,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
             //Display that XY wants to connect but you must be logged in
             showLogInToAddConnectionDialog(userId);
         } else {
-            //Displaty XY wants to connect
+            //Display XY wants to connect
             showAddConnectionDialog(userId);
         }
         /*
