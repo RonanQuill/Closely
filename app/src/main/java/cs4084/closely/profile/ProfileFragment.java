@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,12 +54,14 @@ public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
 
+    private ViewGroup profileView;
     private TextView usernameTextView;
     private TextView bioTextView;
     private TextView numberOfPostsTextView;
     private TextView memberSinceTextView;
     private ImageButton editProfileButton;
     private ImageView profileImageView;
+    private ProgressBar pb;
 
     private String userID;
     private User user;
@@ -93,6 +96,11 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        // Create spinner which is turned off when firebase data loads
+        pb = view.findViewById(R.id.profile_progress_bar);
+        // Constraint view which is hidden
+        profileView = view.findViewById(R.id.profile_layout);
         usernameTextView = view.findViewById(R.id.usernameTextView);
         bioTextView = view.findViewById(R.id.bioTextView);
         numberOfPostsTextView = view.findViewById(R.id.numberOfPostsTextView);
@@ -224,7 +232,8 @@ public class ProfileFragment extends Fragment {
             Glide.with(getContext()).load(user.getProfileURI())
                     .into(profileImageView);
         }
-
+        pb.setVisibility(View.INVISIBLE);
+        profileView.setVisibility(View.VISIBLE);
     }
 
     private void displayPostsForUser() {
