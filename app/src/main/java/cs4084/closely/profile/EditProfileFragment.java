@@ -1,7 +1,6 @@
 package cs4084.closely.profile;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -61,9 +61,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
         applyButton.setOnClickListener(this);
 
-        if (!isNewUser) {
-            loadUser();
-        }
+        loadUser();
         return v;
     }
 
@@ -92,7 +90,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             if (isNewUser) {
                 if (isValidUsernameAndBio()) {
-                    createNewUserProfile();
+                    populateUserProfile();
                 }
             } else {
                 if (!editBioView.getText().toString().equals(user.getBio())) {
@@ -145,14 +143,19 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         return isValidUser;
     }
 
-    private void createNewUserProfile() {
+    private void populateUserProfile() {
+        user.setIsProfileCreated(true);
+        user.setBio(editBioView.getText().toString());
+        user.setUsername(editUsernameView.getText().toString());
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        User newUser = new User(editUsernameView.getText().toString(), editBioView.getText().toString());
-        db.collection("users").add(newUser).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        DocumentReference userRef = db.collection("users").document(user.getDocumentID());
+        userRef.set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("yeet", "onSuccess: created new user");
-                Navigation.findNavController(getView()).navigate(R.id.action_editProfileFragment2_to_navigationFragment);
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getActivity(), "User data updated", Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(getView())
+                        .navigate(R.id.action_editProfileFragment2_to_navigationFragment);
             }
         });
     }

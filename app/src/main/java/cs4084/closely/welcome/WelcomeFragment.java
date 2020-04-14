@@ -6,28 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import cs4084.closely.R;
+import cs4084.closely.user.User;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WelcomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class WelcomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private Button signUpButton;
     private Button signInButton;
@@ -36,30 +31,12 @@ public class WelcomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment welcomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static WelcomeFragment newInstance(String param1, String param2) {
-        WelcomeFragment fragment = new WelcomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            checkForLoggedInUser();
         }
     }
 
@@ -68,10 +45,7 @@ public class WelcomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_welcome, container, false);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            NavHostFragment.findNavController(this).navigate(R.id.action_welcomeFragment_to_navigationFragment);
-        }
+
         return v;
     }
 
@@ -94,5 +68,36 @@ public class WelcomeFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_welcomeFragment_to_signUpFragment);
             }
         });
+    }
+
+    private void checkForLoggedInUser() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    if (document.exists()) {
+                        User user = document.toObject(User.class);
+                        navigateAway(user);
+
+                    }
+                }
+            }
+        });
+    }
+
+    private void navigateAway(User user) {
+        if (user != null) {
+            if (!user.getIsProfileCreated()) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("IsNewUser", true);
+                Navigation.findNavController(getView()).navigate(
+                        R.id.action_welcomeFragment_to_editProfileFragment2, bundle);
+            } else {
+                NavHostFragment.findNavController(this).navigate(R.id.action_welcomeFragment_to_navigationFragment);
+            }
+        }
     }
 }

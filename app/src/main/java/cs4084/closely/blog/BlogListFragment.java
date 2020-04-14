@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -37,6 +38,7 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
     SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar pb;
     private ViewGroup blogListLayout;
+    private TextView noBlogsText;
 
     private List<Blog> blogs = new ArrayList<>();
     private User currentUser;
@@ -55,6 +57,8 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
 
         blogListLayout = view.findViewById(R.id.blog_list_layout);
         pb = view.findViewById(R.id.blog_list_progress_bar);
+        noBlogsText = view.findViewById(R.id.blog_list_empty_text);
+
         swipeRefreshLayout = view.findViewById(R.id.view_blog_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -127,6 +131,13 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Query query;
         if (currentUser != null) {
+            if (currentUser.getConnections().size() == 0) {
+                pb.setVisibility(View.GONE);
+                blogListLayout.setVisibility(View.VISIBLE);
+                noBlogsText.setVisibility(View.VISIBLE);
+                return;
+            }
+
             if (lastQueriedDocument != null) {
                 Log.d(TAG, "starting after: " + lastQueriedDocument.toObject(Blog.class));
                 query = db.collection("blogs")
@@ -151,9 +162,22 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
                                     .get(task.getResult().size() - 1);
                         }
                         adapter.notifyDataSetChanged();
+                        if (blogs.size() == 0) {
+                            getView().findViewById(R.id.blog_list_empty_text).setVisibility(View.VISIBLE);
+
+                        } else {
+
+                        }
                         // remove progress and show data
+                        if (blogs.size() == 0) {
+                            noBlogsText.setVisibility(View.VISIBLE);
+                        } else {
+                            noBlogsText.setVisibility(View.GONE);
+                        }
+
                         pb.setVisibility(View.GONE);
                         blogListLayout.setVisibility(View.VISIBLE);
+
                     }
                 }
             });

@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_welcomeFragment_to_navigationFragment"
             app:destination="@id/navigationFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_editProfileFragment2"
+            app:destination="@id/editProfileFragment2" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment2"

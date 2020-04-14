@@ -10,7 +10,8 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -19,7 +20,20 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:visibility="invisible"
-        tools:context=".blog.BlogListFragment">
+        tools:context=".blog.BlogListFragment"
+        tools:visibility="invisible">
+
+        <TextView
+            android:id="@+id/blog_list_empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No blogs found"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/view_blog_refresh"
@@ -36,7 +50,11 @@
                 android:layout_height="match_parent"
                 android:fadingEdgeLength="70dp"
                 android:requiresFadingEdge="vertical"
-                tools:listitem="@layout/blog_listitem" />
+                tools:listitem="@layout/blog_listitem"
+                tools:visibility="visible">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

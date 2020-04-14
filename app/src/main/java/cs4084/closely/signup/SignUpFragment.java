@@ -16,11 +16,15 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import cs4084.closely.R;
+import cs4084.closely.user.User;
 
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {
@@ -37,20 +41,22 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up, container, false);
+        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        emailField = view.findViewById(R.id.sign_up_email);
+        passwordField = view.findViewById(R.id.sign_up_password);
+        confirmPasswordField = view.findViewById(R.id.sign_up_pwd_confirm);
+        signUpBtn = view.findViewById(R.id.sign_up_btn);
+        auth = FirebaseAuth.getInstance();
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        emailField = getView().findViewById(R.id.sign_up_email);
-        passwordField = getView().findViewById(R.id.sign_up_password);
-        confirmPasswordField = getView().findViewById(R.id.sign_up_pwd_confirm);
 
-        signUpBtn = getView().findViewById(R.id.sign_up_btn);
         signUpBtn.setOnClickListener(this);
 
-        auth = FirebaseAuth.getInstance();
     }
 
     private void createAccount(String email, String password) {
@@ -67,10 +73,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_SHORT).show();
 
-                            Bundle bundle = new Bundle();
-                            bundle.putBoolean("IsNewUser", true);
-                            Navigation.findNavController(getView())
-                                    .navigate(R.id.action_signUpFragment_to_editProfileFragment2, bundle);
+                            createBlankUser();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -94,6 +98,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         if (TextUtils.isEmpty(password)) {
             passwordField.setError("Password Required");
             valid = false;
+        } else if (password.length() < 6) {
+            passwordField.setError("Password must be at least 6 characters");
+            valid = false;
         }
 
         String confirmedPassword = confirmPasswordField.getText().toString();
@@ -105,6 +112,26 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             valid = false;
         }
         return valid;
+    }
+
+
+    private void createBlankUser() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference newUserRef = db.collection("users").document();
+        User blankUser = new User(
+                FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                newUserRef.getId()
+        );
+
+        newUserRef.set(blankUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("IsNewUser", true);
+                Navigation.findNavController(getView()).navigate(
+                        R.id.action_signUpFragment_to_editProfileFragment2, bundle);
+            }
+        });
     }
 
     @Override
