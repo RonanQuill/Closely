@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,8 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
     private static final String TAG = "BlogListFragment";
 
     SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar pb;
+    private ViewGroup blogListLayout;
 
     private List<Blog> blogs = new ArrayList<>();
     private User currentUser;
@@ -50,6 +53,8 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
         initRecyclerView(view);
         getBlogs();
 
+        blogListLayout = view.findViewById(R.id.blog_list_layout);
+        pb = view.findViewById(R.id.blog_list_progress_bar);
         swipeRefreshLayout = view.findViewById(R.id.view_blog_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -146,7 +151,9 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
                                     .get(task.getResult().size() - 1);
                         }
                         adapter.notifyDataSetChanged();
-
+                        // remove progress and show data
+                        pb.setVisibility(View.GONE);
+                        blogListLayout.setVisibility(View.VISIBLE);
                     }
                 }
             });
