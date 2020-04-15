@@ -28,6 +28,7 @@ public class NavigationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
@@ -38,6 +39,7 @@ public class NavigationFragment extends Fragment {
         NavController navController = Navigation.findNavController(view.findViewById(R.id.inner_nav_host_fragment));
         bottomNavigationView = view.findViewById(R.id.bottomNavigationBar);
         bottomNavigationView.setSelectedItemId(R.id.homeFragment);
+        bottomNavigationView.setItemIconTintList(null);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
         return view;
     }
