@@ -1,15 +1,21 @@
 package cs4084.closely.profile;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -31,21 +37,25 @@ import cs4084.closely.profile.posts.ProfilePostsFragment;
 import cs4084.closely.user.User;
 
 
-
 public class ProfileFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
 
+    private ViewGroup profileView;
     private TextView usernameTextView;
     private TextView bioTextView;
     private TextView numberOfPostsTextView;
     private TextView memberSinceTextView;
+    private ImageButton editProfileButton;
+    private ImageView profileImageView;
+    private ProgressBar pb;
 
     private String userID;
     private User user;
     private List<Blog> posts = new ArrayList<>();
     private List<Connection> connections = new ArrayList<>();
+    private Uri profileImageFromEdit;
 
     private ProfilePostsFragment profilePostsFragment;
     private ProfileConnectionsFragment profileConnectionsFragment;
@@ -61,6 +71,10 @@ public class ProfileFragment extends Fragment {
         Connection conn = null;
         if (bundle != null) {
             conn = bundle.getParcelable("connection");
+            String imgUri = bundle.getString("new_img");
+            if (imgUri != null) {
+                profileImageFromEdit = Uri.parse(imgUri);
+            }
         }
 
         if (conn != null) {
@@ -75,10 +89,16 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        // Create spinner which is turned off when firebase data loads
+        pb = view.findViewById(R.id.profile_progress_bar);
+        // Constraint view which is hidden
+        profileView = view.findViewById(R.id.profile_layout);
         usernameTextView = view.findViewById(R.id.usernameTextView);
         bioTextView = view.findViewById(R.id.bioTextView);
         numberOfPostsTextView = view.findViewById(R.id.numberOfPostsTextView);
         memberSinceTextView = view.findViewById(R.id.memberSinceTextView);
+        editProfileButton = view.findViewById(R.id.profile_edit_profile_btn);
 
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager);
@@ -93,6 +113,8 @@ public class ProfileFragment extends Fragment {
 
         viewPager2.setAdapter(profileViewPagerAdapter);
 
+
+        profileImageView = view.findViewById(R.id.profile_profile_img);
 
 
 
@@ -112,6 +134,14 @@ public class ProfileFragment extends Fragment {
             }
         }).attach();
 
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.action_profileFragment_to_editProfileFragment);
+            }
+        });
+
+
     }
 
     private void loadAndDisplayUserProfile(String userID) {
@@ -123,7 +153,9 @@ public class ProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     if (document.exists()) {
                         user = document.toObject(User.class);
+                        user.setDocumentID(document.getId());
                         displayProfileForUser();
+
                     }
                 }
             }
@@ -131,6 +163,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getPostsForUser() {
+        if (posts.size() > 0) posts.clear();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("blogs").whereEqualTo("userID", user.getUserID()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -175,6 +208,20 @@ public class ProfileFragment extends Fragment {
 
         getPostsForUser();
         getConnectionsForUser();
+
+        if (profileImageFromEdit != null) {
+            Glide.with(getContext()).load(profileImageFromEdit)
+                    .into(profileImageView);
+        } else if (user.getProfileURI() != null && !user.getProfileURI().isEmpty()) {
+            Glide.with(getContext()).load(user.getProfileURI())
+                    .into(profileImageView);
+        } else {
+            String imgRequest = "https://api.adorable.io/avatars/285/" + user.getUserID() + ".png";
+            Glide.with(getContext()).load(imgRequest)
+                    .into(profileImageView);
+        }
+        pb.setVisibility(View.INVISIBLE);
+        profileView.setVisibility(View.VISIBLE);
     }
 
     private void displayPostsForUser() {
@@ -182,3 +229,4 @@ public class ProfileFragment extends Fragment {
         profilePostsFragment.notifyDataSetChanged();
     }
 }
+

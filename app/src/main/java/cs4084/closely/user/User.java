@@ -1,29 +1,47 @@
 package cs4084.closely.user;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class User {
 
     private String userID;
+    private boolean isProfileCreated;
     private String username;
+
     private String bio;
+    private String documentID;
+    private String profileURI;
     private List<String> connections;
+
+    public User(String userID, String documentID) {
+        this.userID = userID;
+        this.documentID = documentID;
+        connections = new ArrayList<>();
+    }
 
     public String getUserID() {
         return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
     }
 
     public String getBio() {
@@ -37,5 +55,22 @@ public class User {
     public List<String> getConnections() {
         return connections;
     }
+
+    public String getProfileURI() {
+        return profileURI;
+    }
+
+    public void setProfileURI(String profileURI) {
+        this.profileURI = profileURI;
+    }
+
+    public boolean getIsProfileCreated() {
+        return isProfileCreated;
+    }
+
+    public void setIsProfileCreated(boolean isCreated) {
+        isProfileCreated = isCreated;
+    }
+
     public User(){}
 }
