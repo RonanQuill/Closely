@@ -51,9 +51,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         Button signInButton = view.findViewById(R.id.sign_in_btn);
         signInButton.setOnClickListener(this);
-
-        Button signUpButton = view.findViewById(R.id.sign_up_btn);
-        signUpButton.setOnClickListener(this);
     }
 
     @Override
@@ -61,10 +58,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.sign_in_btn:
                 signIn();
-                break;
-
-            case R.id.sign_up_btn:
-                Navigation.findNavController(v).navigate(R.id.action_signInFragment_to_signUpFragment);
                 break;
         }
     }
