@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +73,7 @@ public class ViewBlogFragment extends Fragment {
         TextView bodyView = view.findViewById(R.id.view_blog_body);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
         final ImageView imageView =  view.findViewById(R.id.imageView2);
-        Button imageBtn = view.findViewById(R.id.imageButton);
+        ImageButton imageBtn = view.findViewById(R.id.imageButton);
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,13 +97,14 @@ public class ViewBlogFragment extends Fragment {
             private void pickImageFromGallery() {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent,IMAGE_PICK_CODE);
+                startActivityForResult(intent, IMAGE_PICK_CODE);
             }
 
 
             public void onActivityResult(int requestCode, int resultCode, Intent data) {
                 if(resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
                     imageView.setImageURI(data.getData());
+                    Log.d(TAG, "happened");
                 }
             }
 
@@ -112,6 +114,7 @@ public class ViewBlogFragment extends Fragment {
                     case PERMISSION_CODE : {
                         if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                             pickImageFromGallery();
+                            Log.d(TAG, "happened");
                         }
                         else {
                             Toast.makeText(getActivity(), "Permission DENIED",

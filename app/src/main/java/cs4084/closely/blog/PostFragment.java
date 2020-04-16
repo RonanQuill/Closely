@@ -1,11 +1,15 @@
 package cs4084.closely.blog;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,11 +29,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import cs4084.closely.R;
 import cs4084.closely.user.User;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class PostFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "PostFragment";
 
     private User user;
+    private Uri newImage;
+    private ImageView postImageView;
+
 
     public PostFragment() {
         // Required empty public constructor
@@ -41,6 +50,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_fragment,
                 container, false);
+        postImageView = view.findViewById(R.id.create_blog_image);
+        postImageView.setOnClickListener(this);
 
         Log.d("", "onCreateView: Big view created");
         getUser();
@@ -52,6 +63,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button post = view.findViewById(R.id.post_button);
+        ImageButton postImg = view.findViewById(R.id.imageButton_postblog);
+        postImg.setOnClickListener(this);
         post.setOnClickListener(this);
         Log.d("click", " added");
     }
@@ -62,6 +75,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.post_button:
                 postBlog();
+            case R.id.imageButton_postblog:
+                addImg();
         }
     }
 
@@ -109,4 +124,25 @@ public class PostFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
+    private void addImg() {
+        Intent cameraIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        cameraIntent.setType("image/*");
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, 1000);
+        }
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1000) {
+                newImage = data.getData();
+                postImageView.setImageURI(newImage);
+
+            }
+        }
+    }
+
 }

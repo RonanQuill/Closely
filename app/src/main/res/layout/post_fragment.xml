@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".blog.PostFragment">
 
+    <ImageView
+        android:id="@+id/create_blog_image"
+        android:layout_width="324dp"
+        android:layout_height="147dp"
+        android:src="@drawable/ic_launcher_background"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_button"
+        app:layout_constraintVertical_bias="0.335" />
+
     <EditText
         android:id="@+id/create_blog_title"
         android:layout_width="389dp"
@@ -66,7 +79,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Create_blog_content"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.106" />
 
     <TextView
         android:id="@+id/textView"
@@ -81,5 +94,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.047" />
+
+    <ImageButton
+        android:id="@+id/imageButton_postblog"
+        android:layout_width="62dp"
+        android:layout_height="53dp"
+        android:src="@android:drawable/ic_menu_upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/post_button"
+        app:layout_constraintHorizontal_bias="0.303"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Create_blog_content"
+        app:layout_constraintVertical_bias="0.108" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,8 +62,8 @@
 
     <EditText
         android:id="@+id/view_blog_comment_content"
-        android:layout_width="273dp"
-        android:layout_height="69dp"
+        android:layout_width="410dp"
+        android:layout_height="74dp"
         android:background="#D5CBCB"
         android:ems="10"
         android:gravity="start|top"
@@ -82,10 +82,10 @@
         android:text="Add Comment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.318"
+        app:layout_constraintHorizontal_bias="0.259"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_blog_comment_content"
-        app:layout_constraintVertical_bias="0.184" />
+        app:layout_constraintVertical_bias="0.181" />
 
     <Button
         android:id="@+id/view_blog_view_comments"
@@ -98,29 +98,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_blog_comment_content"
         app:layout_constraintVertical_bias="0.184" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="58dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_image_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/view_blog_add_comment"
-        app:layout_constraintHorizontal_bias="0.484"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_comment_content"
-        app:layout_constraintVertical_bias="0.024" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="120dp"
-        android:layout_height="69dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
-        app:layout_constraintStart_toEndOf="@+id/view_blog_comment_content"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_body"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
