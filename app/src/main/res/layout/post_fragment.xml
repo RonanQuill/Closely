@@ -8,103 +8,86 @@
 
     <ImageView
         android:id="@+id/create_blog_image"
-        android:layout_width="324dp"
-        android:layout_height="147dp"
-        android:src="@drawable/ic_launcher_background"
+        android:layout_width="372dp"
+        android:layout_height="166dp"
+        android:src="@drawable/image_create_blog"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_button"
-        app:layout_constraintVertical_bias="0.335" />
+        app:layout_constraintTop_toBottomOf="@+id/post_button" />
 
     <EditText
         android:id="@+id/create_blog_title"
-        android:layout_width="389dp"
+        android:layout_width="392dp"
         android:layout_height="46dp"
-        android:background="#938C8C"
+        android:background="@drawable/input_dark"
         android:ems="10"
         android:inputType="textPersonName"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:text="Title"
         android:textColor="#FBFBFB"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/Create_blog_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.145" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/Create_blog_subtitle"
-        android:layout_width="389dp"
+        android:layout_width="392dp"
         android:layout_height="46dp"
-        android:background="#938C8C"
+        android:background="@drawable/input_dark"
         android:ems="10"
         android:inputType="textPersonName"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:text="Subtitle"
         android:textColor="#FDFAFA"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/Create_blog_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_blog_title"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintTop_toBottomOf="@+id/create_blog_title" />
 
     <EditText
         android:id="@+id/Create_blog_content"
-        android:layout_width="401dp"
-        android:layout_height="86dp"
-        android:layout_marginTop="43dp"
-        android:background="#938C8C"
+        android:layout_width="392dp"
+        android:layout_height="150dp"
+        android:background="@drawable/input_dark"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/post_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Create_blog_subtitle"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintTop_toBottomOf="@+id/Create_blog_subtitle" />
 
     <Button
         android:id="@+id/post_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#938C8C"
+        android:background="@drawable/button_primary"
         android:text="Post"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAllCaps="false"
+        android:textColor="@color/background"
+        app:layout_constraintBottom_toTopOf="@+id/create_blog_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Create_blog_content"
-        app:layout_constraintVertical_bias="0.106" />
+        app:layout_constraintTop_toBottomOf="@+id/Create_blog_content" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
         android:text="Create a blog"
-        android:textColor="#FBF9F9"
+        android:textColor="#FFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/create_blog_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.047" />
-
-    <ImageButton
-        android:id="@+id/imageButton_postblog"
-        android:layout_width="62dp"
-        android:layout_height="53dp"
-        android:src="@android:drawable/ic_menu_upload"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/post_button"
-        app:layout_constraintHorizontal_bias="0.303"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Create_blog_content"
-        app:layout_constraintVertical_bias="0.108" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
