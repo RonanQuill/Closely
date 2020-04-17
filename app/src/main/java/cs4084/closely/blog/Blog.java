@@ -13,6 +13,8 @@ public class Blog implements Parcelable {
     private String body;
     private String author;
     private String userID;
+    private String blogImage;
+    private String documentId;
     private Timestamp datePosted;
     HashMap<String, String> comments = new HashMap<String, String>();
 
@@ -95,4 +97,19 @@ public class Blog implements Parcelable {
         dest.writeString(author);
         dest.writeString(userID);
     }
+    public String getBlogImage() {
+        return blogImage;
+    }
+
+    public void setBlogImage(String blogImage) {
+        this.blogImage = blogImage;
+    }
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
 }

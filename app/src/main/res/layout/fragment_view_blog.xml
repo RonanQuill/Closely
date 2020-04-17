@@ -35,8 +35,8 @@
 
     <TextView
         android:id="@+id/view_blog_body"
-        android:layout_width="403dp"
-        android:layout_height="176dp"
+        android:layout_width="408dp"
+        android:layout_height="173dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
@@ -73,7 +73,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_blog_body"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.341" />
 
     <Button
         android:id="@+id/view_blog_add_comment"
@@ -98,5 +98,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_blog_comment_content"
         app:layout_constraintVertical_bias="0.184" />
+
+    <ImageView
+        android:id="@+id/imageView_viewBlog"
+        android:layout_width="106dp"
+        android:layout_height="65dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toTopOf="@+id/view_blog_comment_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_blog_body" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

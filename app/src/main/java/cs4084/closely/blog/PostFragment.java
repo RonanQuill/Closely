@@ -11,11 +11,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +28,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -103,26 +109,23 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         TextView subtitle = getView().findViewById(R.id.Create_blog_subtitle);
         TextView content = getView().findViewById(R.id.Create_blog_content);
 
-        Blog b = new Blog(
+        final Blog b = new Blog(
                 title.getText().toString(),
                 subtitle.getText().toString(),
                 content.getText().toString(),
                 user.getUsername(),
                 FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 null);
-
-        db.collection("blogs").add(b)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+        DocumentReference blogref = db.collection("blogs").document();
+        b.setDocumentId(blogref.getId());
+        blogref.set(b).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
+            public void onSuccess(Void aVoid) {
+                saveToFirestore(newImage,b.getDocumentId());
+                Navigation.findNavController(getView()).navigate(R.id.action_postFragment_to_blogListFragment);
             }
         });
+
     }
     private void addImg() {
         Intent cameraIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -143,6 +146,43 @@ public class PostFragment extends Fragment implements View.OnClickListener {
 
             }
         }
+    }
+    private void saveToFirestore(Uri file, final String blogId) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        final StorageReference profileReference = storageRef.child("images/" + blogId);
+
+        profileReference.putFile(file).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return profileReference.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Log.d("yeet", "onComplete: " + task.getResult().toString());
+                    //Save uri to user object
+                    addBlogImage(task.getResult().toString(), blogId);
+                }
+            }
+        });
+
+    }
+
+    private void addBlogImage(String blogImageURI, String blogId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference blogReference = db.collection("blogs").document(blogId);
+        blogReference.update("blogImage", blogImageURI).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: Did mans ting hapen fam");
+                Toast.makeText(getActivity(), "blog image added", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
