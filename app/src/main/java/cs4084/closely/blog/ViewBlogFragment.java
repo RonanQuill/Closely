@@ -115,8 +115,6 @@ public class ViewBlogFragment extends Fragment {
                                 Log.d(TAG, "onComplete: User found");
                             }
                             postComment();
-                            Toast.makeText(getActivity(), "Comment posted",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -125,24 +123,28 @@ public class ViewBlogFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference washingtonRef = db.collection("blogs").document(blog.getDocumentId());
         TextView content = getView().findViewById(R.id.view_blog_comment_content);
-        HashMap<String, String> comments = blog.getComments();
-        comments.put(currentUser.getUsername(), content.getText().toString());
-        washingtonRef
-                .update("comments",comments)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
+        if (!content.getText().toString().isEmpty()) {
+            HashMap<String, String> comments = blog.getComments();
+            comments.put(currentUser.getUsername(), content.getText().toString());
+            washingtonRef
+                    .update("comments", comments)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getActivity(), "Comment posted",
+                                    Toast.LENGTH_SHORT).show();                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error updating document", e);
+                        }
+                    });
 
 
+        } else {
+            Toast.makeText(getActivity(), "Comments cannot be empty",Toast.LENGTH_SHORT).show();
+        }
     }
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.comment_recycler_view);
