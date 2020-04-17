@@ -16,6 +16,7 @@ public class BlogRecyclerViewAdapter extends RecyclerView.Adapter<BlogRecyclerVi
 
     private List<Blog> mBlogs;
 
+
     private OnBlogListener onBlogListener;
 
     public BlogRecyclerViewAdapter(List<Blog> blogs, OnBlogListener onBlogListener) {

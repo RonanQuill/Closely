@@ -50,7 +50,11 @@
         android:id="@+id/postFragment"
         android:name="cs4084.closely.blog.PostFragment"
         android:label="post_fragment"
-        tools:layout="@layout/post_fragment" />
+        tools:layout="@layout/post_fragment" >
+        <action
+            android:id="@+id/action_postFragment_to_blogListFragment"
+            app:destination="@id/blogListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="cs4084.closely.profile.EditProfileFragment"
