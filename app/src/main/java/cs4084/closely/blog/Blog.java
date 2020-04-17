@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Blog implements Parcelable {
     private String title;
@@ -112,4 +114,11 @@ public class Blog implements Parcelable {
         this.documentId = documentId;
     }
 
+    public ArrayList<Comment> getCommentList() {
+        ArrayList<Comment> commentList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : comments.entrySet()) {
+            commentList.add(new Comment(entry.getKey(),entry.getValue()));
+        }
+        return commentList;
+    }
 }

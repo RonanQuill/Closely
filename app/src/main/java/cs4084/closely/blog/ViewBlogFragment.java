@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +48,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  */
 public class ViewBlogFragment extends Fragment {
     private Blog blog;
+    CommentRecyclerViewAdapter adapter;
     private User currentUser;
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
@@ -70,6 +73,7 @@ public class ViewBlogFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_blog, container, false);
         TextView titleView = view.findViewById(R.id.view_blog_title);
+        initRecyclerView(view);
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
         TextView authorView = view.findViewById(R.id.view_blog_author);
         TextView bodyView = view.findViewById(R.id.view_blog_body);
@@ -119,9 +123,9 @@ public class ViewBlogFragment extends Fragment {
     }
     private void postComment() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference washingtonRef = db.collection("blogs").document("6sYh3Sa69ccVmBDpYMSd");
+        DocumentReference washingtonRef = db.collection("blogs").document(blog.getDocumentId());
         TextView content = getView().findViewById(R.id.view_blog_comment_content);
-        HashMap<String, String> comments = new HashMap<String, String>();
+        HashMap<String, String> comments = blog.getComments();
         comments.put(currentUser.getUsername(), content.getText().toString());
         washingtonRef
                 .update("comments",comments)
@@ -139,6 +143,12 @@ public class ViewBlogFragment extends Fragment {
                 });
 
 
+    }
+    private void initRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.comment_recycler_view);
+        adapter = new CommentRecyclerViewAdapter(blog.getCommentList());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
 }
