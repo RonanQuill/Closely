@@ -1,5 +1,6 @@
 package cs4084.closely.user;
 
+import java.util.ArrayList;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,10 +16,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class User {
 
+    private String userID;
+    private boolean isProfileCreated;
+    private String username;
+
+    private String bio;
+    private String documentID;
+    private String profileURI;
+    private List<String> connections;
     public interface OnLoaded
     {
         public void OnLoaded(User user);
@@ -58,8 +66,34 @@ public class User {
         this.documentID = documentID;
     }
 
+    public User(String userID, String documentID) {
+        this.userID = userID;
+        this.documentID = documentID;
+        connections = new ArrayList<>();
+    }
+
     public String getUserID() {
         return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
     }
 
     public String getBio() {
@@ -93,4 +127,22 @@ public class User {
         map.put("connections", connections);
         return map;
     }
+
+    public String getProfileURI() {
+        return profileURI;
+    }
+
+    public void setProfileURI(String profileURI) {
+        this.profileURI = profileURI;
+    }
+
+    public boolean getIsProfileCreated() {
+        return isProfileCreated;
+    }
+
+    public void setIsProfileCreated(boolean isCreated) {
+        isProfileCreated = isCreated;
+    }
+
+    public User(){}
 }

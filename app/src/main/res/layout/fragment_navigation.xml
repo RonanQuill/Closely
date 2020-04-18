@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".navigation.NavigationFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,12 +14,14 @@
         android:id="@+id/bottomNavigationBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#3C3C3C"
+        android:background="@color/darkItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inner_nav_host_fragment"
-        app:menu="@menu/bottom_navigation_bar_menu" />
+        app:menu="@menu/bottom_navigation_bar_menu"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="48dp" />
 
     <fragment
         android:id="@+id/inner_nav_host_fragment"

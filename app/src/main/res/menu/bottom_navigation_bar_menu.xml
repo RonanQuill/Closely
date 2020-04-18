@@ -2,16 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/blogListFragment"
-        android:icon="@null"
+        android:icon="@drawable/list_nav_menu_item"
         android:title="Blogs" />
 
     <item
         android:id="@+id/homeFragment"
-        android:icon="@null"
+        android:icon="@drawable/add_nav_menu_item"
+        android:iconTint="@null"
         android:title="Add" />
 
     <item
         android:id="@+id/profileFragment"
-        android:icon="@null"
+        android:icon="@drawable/account_nav_menu_item"
         android:title="Profile" />
 </menu>

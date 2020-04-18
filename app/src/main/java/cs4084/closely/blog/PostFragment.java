@@ -1,34 +1,51 @@
 package cs4084.closely.blog;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import cs4084.closely.R;
+import cs4084.closely.user.User;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class PostFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "PostFragment";
+
+    private User user;
+    private Uri newImage;
+    private ImageView postImageView;
+
+
     public PostFragment() {
         // Required empty public constructor
     }
@@ -39,8 +56,11 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_fragment,
                 container, false);
+        postImageView = view.findViewById(R.id.create_blog_image);
+        postImageView.setOnClickListener(this);
 
         Log.d("", "onCreateView: Big view created");
+        getUser();
         // Inflate the layout for this fragment
         return view;
     }
@@ -59,29 +79,26 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.post_button:
                 postBlog();
+            case R.id.create_blog_image:
+                addImg();
         }
     }
 
-    private String getUsername () {
+    private void getUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-         final ArrayList<String> userIDlist = new ArrayList<String>();
-        db.collection("users")
-                .whereEqualTo("userID",userIDlist)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                userIDlist.add((String)(document.get("userID")));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    if (document.exists()) {
+                        user = document.toObject(User.class);
+                        user.setDocumentID(document.getId());
                     }
-                });
-        return userIDlist.get(0);
+                }
+            }
+        });
     }
 
     private void postBlog() {
@@ -89,23 +106,81 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         TextView title = getView().findViewById(R.id.create_blog_title);
         TextView subtitle = getView().findViewById(R.id.Create_blog_subtitle);
         TextView content = getView().findViewById(R.id.Create_blog_content);
-        Log.d(TAG, "postBlog: "+title.getText());
-        Log.d(TAG, "postBlog: "+subtitle.getText());
-        Log.d(TAG, "postBlog: "+content.getText());
-        Blog b = new Blog ( title .getText().toString(),
+
+        final Blog b = new Blog(
+                title.getText().toString(),
                 subtitle.getText().toString(),
-                content.getText().toString(), getUsername(),FirebaseAuth.getInstance().getCurrentUser().getUid(),null );
-            db.collection("blogs").add(b).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                content.getText().toString(),
+                user.getUsername(),
+                FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                null);
+        DocumentReference blogref = db.collection("blogs").document();
+        b.setDocumentId(blogref.getId());
+        blogref.set(b).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+            public void onSuccess(Void aVoid) {
+                saveToFirestore(newImage,b.getDocumentId());
+                Navigation.findNavController(getView()).navigate(R.id.action_postFragment_to_blogListFragment);
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+        });
+
     }
+    private void addImg() {
+        Intent cameraIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        cameraIntent.setType("image/*");
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, 1000);
+        }
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1000) {
+                newImage = data.getData();
+                postImageView.setImageURI(newImage);
+
+            }
+        }
+    }
+    private void saveToFirestore(Uri file, final String blogId) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        final StorageReference profileReference = storageRef.child("images/" + blogId);
+
+        profileReference.putFile(file).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return profileReference.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Log.d("yeet", "onComplete: " + task.getResult().toString());
+                    //Save uri to user object
+                    addBlogImage(task.getResult().toString(), blogId);
+                }
+            }
+        });
+
+    }
+
+    private void addBlogImage(String blogImageURI, String blogId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference blogReference = db.collection("blogs").document(blogId);
+        blogReference.update("blogImage", blogImageURI).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: Did mans ting hapen fam");
+                Toast.makeText(getActivity(), "blog image added", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
