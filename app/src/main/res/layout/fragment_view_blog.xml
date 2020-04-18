@@ -3,117 +3,124 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fillViewport="true">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".blog.ViewBlogFragment">
-
-
-    <ImageView
-        android:id="@+id/imageView_viewBlog"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:src="@drawable/ic_launcher_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.839"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/view_blog_title"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Title"
-        android:textColor="#FFFFFF"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_viewBlog" />
+        android:background="@color/background"
+        tools:context=".blog.ViewBlogFragment">
 
-    <TextView
-        android:id="@+id/view_blog_subtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Subtitle"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_title" />
 
-    <TextView
-        android:id="@+id/view_blog_body"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
-        android:padding="10dp"
-        android:text="TextView"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_blog_comment_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_author" />
+        <ImageView
+            android:id="@+id/imageView_viewBlog"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.839"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/view_blog_author"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Rian"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_blog_body"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_subtitle" />
+        <TextView
+            android:id="@+id/view_blog_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:text="Title"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_viewBlog" />
 
-    <EditText
-        android:id="@+id/view_blog_comment_content"
-        android:layout_width="0dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/input_dark"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_body" />
+        <TextView
+            android:id="@+id/view_blog_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Subtitle"
+            android:textColor="#CCFFFFFF"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_blog_title" />
 
-    <Button
-        android:id="@+id/view_blog_add_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Comment"
-        app:layout_constraintBottom_toTopOf="@+id/comment_recycler_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_comment_content"
-        app:layout_constraintVertical_bias="1.0" />
+        <TextView
+            android:id="@+id/view_blog_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/view_blog_comment_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_blog_author" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/comment_recycler_view"
-        android:layout_width="411dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_blog_add_comment" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/view_blog_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Rian"
+            android:textColor="#80FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/view_blog_body"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_blog_subtitle" />
+
+        <EditText
+            android:id="@+id/view_blog_comment_content"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/input_dark"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_blog_body" />
+
+        <Button
+            android:id="@+id/view_blog_add_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_secondary"
+            android:text="Comment"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@+id/comment_recycler_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_blog_comment_content"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comment_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minWidth="400dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_blog_add_comment" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

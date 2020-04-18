@@ -102,6 +102,9 @@ public class ProfileFragment extends Fragment {
         numberOfPostsTextView = view.findViewById(R.id.numberOfPostsTextView);
         memberSinceTextView = view.findViewById(R.id.memberSinceTextView);
         editProfileButton = view.findViewById(R.id.profile_edit_profile_btn);
+        if (!userID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            editProfileButton.setVisibility(View.GONE);
+        }
 
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager);
@@ -184,7 +187,9 @@ public class ProfileFragment extends Fragment {
 
     private void getConnectionsForUser() {
         List<String> userConnections = user.getConnections();
-
+        if (connections != null && connections.size() > 0) {
+            connections.clear();
+        }
         if(userConnections != null && !userConnections.isEmpty()) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
