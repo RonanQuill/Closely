@@ -26,7 +26,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cs4084.closely.R;
@@ -99,6 +102,9 @@ public class ProfileFragment extends Fragment {
         numberOfPostsTextView = view.findViewById(R.id.numberOfPostsTextView);
         memberSinceTextView = view.findViewById(R.id.memberSinceTextView);
         editProfileButton = view.findViewById(R.id.profile_edit_profile_btn);
+        if (!userID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            editProfileButton.setVisibility(View.GONE);
+        }
 
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager);
@@ -115,7 +121,7 @@ public class ProfileFragment extends Fragment {
 
 
         profileImageView = view.findViewById(R.id.profile_profile_img);
-
+        profileImageView.setClipToOutline(true);
 
 
         loadAndDisplayUserProfile(userID);
@@ -155,7 +161,6 @@ public class ProfileFragment extends Fragment {
                         user = document.toObject(User.class);
                         user.setDocumentID(document.getId());
                         displayProfileForUser();
-
                     }
                 }
             }
@@ -182,7 +187,9 @@ public class ProfileFragment extends Fragment {
 
     private void getConnectionsForUser() {
         List<String> userConnections = user.getConnections();
-
+        if (connections != null && connections.size() > 0) {
+            connections.clear();
+        }
         if(userConnections != null && !userConnections.isEmpty()) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -205,6 +212,7 @@ public class ProfileFragment extends Fragment {
     private void displayProfileForUser() {
         usernameTextView.setText(user.getUsername());
         bioTextView.setText(user.getBio());
+        memberSinceTextView.setText("Member since: " + getMemberSinceDate());
 
         getPostsForUser();
         getConnectionsForUser();
@@ -217,8 +225,7 @@ public class ProfileFragment extends Fragment {
                     .into(profileImageView);
         } else {
             String imgRequest = "https://api.adorable.io/avatars/285/" + user.getUserID() + ".png";
-            Glide.with(getContext()).load(imgRequest)
-                    .into(profileImageView);
+            Glide.with(getContext()).load(imgRequest).into(profileImageView);
         }
         pb.setVisibility(View.INVISIBLE);
         profileView.setVisibility(View.VISIBLE);
@@ -227,6 +234,13 @@ public class ProfileFragment extends Fragment {
     private void displayPostsForUser() {
         numberOfPostsTextView.setText("Number of Posts: " + posts.size());
         profilePostsFragment.notifyDataSetChanged();
+    }
+
+    private String getMemberSinceDate() {
+        long creationDateTimeStamp = FirebaseAuth.getInstance().getCurrentUser().getMetadata().getCreationTimestamp();
+        Date creationDate = new Date(creationDateTimeStamp);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(creationDate);
     }
 }
 

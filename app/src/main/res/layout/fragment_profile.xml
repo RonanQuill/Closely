@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/profile_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,22 +21,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:context=".profile.ProfileFragment">
 
 
         <ImageView
             android:id="@+id/profile_profile_img"
-            android:layout_width="0dp"
-            android:layout_height="750px"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="24dp"
             android:adjustViewBounds="true"
-            android:background="#808080"
-            android:scaleType="centerCrop"
+            android:background="@drawable/input_dark"
+            android:scaleType="center"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.061"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:outlineProvider="background" />
 
         <TextView
             android:id="@+id/usernameTextView"
@@ -43,49 +46,61 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Username"
+            android:textColor="#FDFDFD"
             android:textSize="30sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/profile_profile_img" />
+            app:layout_constraintHorizontal_bias="0.301"
+            app:layout_constraintStart_toEndOf="@+id/profile_profile_img"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/bioTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:gravity="center"
             android:text="Short Bio"
+            android:textColor="#CCFFFFFF"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/usernameTextView"
+            app:layout_constraintStart_toStartOf="@+id/usernameTextView"
             app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
         <TextView
             android:id="@+id/numberOfPostsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="Number of Posts: 0"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toStartOf="@+id/memberSinceTextView"
+            app:layout_constraintHorizontal_bias="0.228"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bioTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_profile_img" />
 
         <TextView
             android:id="@+id/memberSinceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:text="Member Since: 10/10/2010"
-            app:layout_constraintStart_toStartOf="@+id/numberOfPostsTextView"
-            app:layout_constraintTop_toBottomOf="@+id/numberOfPostsTextView" />
+            android:textColor="#FFFFFF"
+            app:layout_constraintBaseline_toBaselineOf="@+id/numberOfPostsTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/usernameTextView" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
             app:layout_constraintBottom_toTopOf="@+id/viewPager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_profile_img"></com.google.android.material.tabs.TabLayout>
+            app:layout_constraintTop_toBottomOf="@+id/memberSinceTextView"
+            app:tabSelectedTextColor="#FFFFFF"
+            app:tabTextColor="#80FFFFFF"></com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
@@ -98,12 +113,13 @@
 
         <ImageButton
             android:id="@+id/profile_edit_profile_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="36dp"
-            android:layout_marginBottom="32dp"
-            android:background="#00000000"
-            android:src="@android:drawable/ic_menu_edit"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/darkItemBackground"
+            android:src="@drawable/ic_setttings"
+            android:tint="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/tabLayout"
             app:layout_constraintEnd_toEndOf="parent" />
 

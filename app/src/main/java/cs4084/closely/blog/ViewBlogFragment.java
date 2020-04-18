@@ -1,23 +1,17 @@
 package cs4084.closely.blog;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,14 +27,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
 
-import static android.app.Activity.RESULT_OK;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
@@ -77,7 +68,8 @@ public class ViewBlogFragment extends Fragment {
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
         TextView authorView = view.findViewById(R.id.view_blog_author);
         TextView bodyView = view.findViewById(R.id.view_blog_body);
-        ImageView myimgV = view.findViewById(R.id.imageView_viewBlog);
+        TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
+        ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
         final ImageView imageView =  view.findViewById(R.id.imageView2);
         postComment.setOnClickListener(new View.OnClickListener() {
@@ -93,9 +85,14 @@ public class ViewBlogFragment extends Fragment {
             authorView.setText(blog.getAuthor());
             bodyView.setText(blog.getBody());
             if(blog.getBlogImage() != null && !blog.getBlogImage().isEmpty()) {
-                Glide.with(getContext()).load(blog.getBlogImage()).into(myimgV);
+                Log.d(TAG, "onCreateView: " + blog.getBlogImage());
+                Glide.with(getContext()).load(blog.getBlogImage()).into(blogImageView);
             } else {
-                myimgV.setVisibility(View.INVISIBLE);
+                blogImageView.setVisibility(View.GONE);
+            }
+
+            if (blog.getCommentList().size() == 0) {
+                commentTitleText.setVisibility(View.GONE);
             }
         }
         return view;
