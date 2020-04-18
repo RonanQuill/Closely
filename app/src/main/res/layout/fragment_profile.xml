@@ -14,7 +14,8 @@
         app:layout_constraintBottom_toTopOf="@+id/profile_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_layout"
@@ -22,7 +23,8 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:visibility="visible"
-        tools:context=".profile.ProfileFragment">
+        tools:context=".profile.ProfileFragment"
+        tools:visibility="visible">
 
 
         <ImageView
@@ -32,13 +34,13 @@
             android:layout_marginTop="24dp"
             android:adjustViewBounds="true"
             android:background="@drawable/input_dark"
+            android:outlineProvider="background"
             android:scaleType="center"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.061"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:outlineProvider="background" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/usernameTextView"

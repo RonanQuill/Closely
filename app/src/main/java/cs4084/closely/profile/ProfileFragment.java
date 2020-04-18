@@ -52,7 +52,7 @@ public class ProfileFragment extends Fragment {
     private TextView memberSinceTextView;
     private ImageButton editProfileButton;
     private ImageView profileImageView;
-    private ProgressBar pb;
+    private ProgressBar progressBar;
 
     private String userID;
     private User user;
@@ -94,7 +94,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Create spinner which is turned off when firebase data loads
-        pb = view.findViewById(R.id.profile_progress_bar);
+        progressBar = view.findViewById(R.id.profile_progress_bar);
         // Constraint view which is hidden
         profileView = view.findViewById(R.id.profile_layout);
         usernameTextView = view.findViewById(R.id.usernameTextView);
@@ -116,13 +116,13 @@ public class ProfileFragment extends Fragment {
         profileViewPagerAdapter.addFragment(profilePostsFragment);
         profileViewPagerAdapter.addFragment(profileConnectionsFragment);
 
-
         viewPager2.setAdapter(profileViewPagerAdapter);
-
 
         profileImageView = view.findViewById(R.id.profile_profile_img);
         profileImageView.setClipToOutline(true);
 
+        progressBar.setVisibility(View.VISIBLE);
+        profileView.setVisibility(View.GONE);
 
         loadAndDisplayUserProfile(userID);
         return view;
@@ -151,18 +151,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadAndDisplayUserProfile(String userID) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        User.loadUser(userID, new User.OnLoaded() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                    if (document.exists()) {
-                        user = document.toObject(User.class);
-                        user.setDocumentID(document.getId());
-                        displayProfileForUser();
-                    }
-                }
+            public void OnLoaded(User loadedUser) {
+                user = loadedUser;
+                displayProfileForUser();
             }
         });
     }
@@ -227,7 +220,8 @@ public class ProfileFragment extends Fragment {
             String imgRequest = "https://api.adorable.io/avatars/285/" + user.getUserID() + ".png";
             Glide.with(getContext()).load(imgRequest).into(profileImageView);
         }
-        pb.setVisibility(View.INVISIBLE);
+
+        progressBar.setVisibility(View.GONE);
         profileView.setVisibility(View.VISIBLE);
     }
 
