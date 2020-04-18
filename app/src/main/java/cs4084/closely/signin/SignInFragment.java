@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import cs4084.closely.Closely;
 import cs4084.closely.R;
 
 
@@ -85,7 +86,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = auth.getCurrentUser();
                                 Log.d(TAG, "Signed in user: " + user.getEmail());
-                                //TODO redirect user to home page
+
                                 Navigation.findNavController(getView()).navigate(R.id.action_signInFragment_to_navigationFragment);
                             } else {
                                 // If sign in fails, display a message to the user.

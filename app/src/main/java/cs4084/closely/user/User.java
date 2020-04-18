@@ -1,23 +1,62 @@
 package cs4084.closely.user;
 
 import java.util.ArrayList;
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User {
+    public interface OnLoaded
+    {
+        public void OnLoaded(User user);
+    }
 
-    private String userID;
-    private boolean isProfileCreated;
-    private String username;
-
-    private String bio;
     private String documentID;
+    private String userID = "";
+    private String username = "";
+    private String bio = "";
+    private List<String> connections = new ArrayList<>();
+
+    private boolean isProfileCreated;
     private String profileURI;
-    private List<String> connections;
+
+    public User(){}
 
     public User(String userID, String documentID) {
         this.userID = userID;
         this.documentID = documentID;
         connections = new ArrayList<>();
+    }
+
+    public static void loadUser(String userID, final User.OnLoaded onLoaded) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").whereEqualTo("userID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    if (document.exists()) {
+                        User user = document.toObject(User.class);
+                        user.setDocumentID(document.getId());
+                        onLoaded.OnLoaded(user);
+                    }
+                }
+            }
+        });
     }
 
     public String getUserID() {
@@ -56,6 +95,26 @@ public class User {
         return connections;
     }
 
+    public void connectToUser(User otherUser) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        this.connections.add(otherUser.getUserID());
+        db.collection("users").document(this.getDocumentID()).update(this.toMap());
+
+        otherUser.connections.add(this.getUserID());
+        db.collection("users").document(otherUser.getDocumentID()).update(otherUser.toMap());
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userID", userID);
+        map.put("username", username);
+        map.put("bio", bio);
+        map.put("connections", connections);
+        return map;
+    }
+
     public String getProfileURI() {
         return profileURI;
     }
@@ -71,6 +130,4 @@ public class User {
     public void setIsProfileCreated(boolean isCreated) {
         isProfileCreated = isCreated;
     }
-
-    public User(){}
 }
