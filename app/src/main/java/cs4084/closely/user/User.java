@@ -16,20 +16,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User {
-
-    private String userID;
-    private boolean isProfileCreated;
-    private String username;
-
-    private String bio;
-    private String documentID;
-    private String profileURI;
-    private List<String> connections;
     public interface OnLoaded
     {
         public void OnLoaded(User user);
+    }
+
+    private String documentID;
+    private String userID = "";
+    private String username = "";
+    private String bio = "";
+    private List<String> connections = new ArrayList<>();
+
+    private boolean isProfileCreated;
+    private String profileURI;
+
+    public User(){}
+
+    public User(String userID, String documentID) {
+        this.userID = userID;
+        this.documentID = documentID;
+        connections = new ArrayList<>();
     }
 
     public static void loadUser(String userID, final User.OnLoaded onLoaded) {
@@ -48,28 +57,6 @@ public class User {
                 }
             }
         });
-    }
-
-    private String documentID;
-    private String userID = "";
-    private String username = "";
-    private String bio = "";
-    private List<String> connections = new ArrayList<>();
-
-    public User(){}
-
-    public String getDocumentID() {
-        return documentID;
-    }
-
-    public void setDocumentID(String documentID) {
-        this.documentID = documentID;
-    }
-
-    public User(String userID, String documentID) {
-        this.userID = userID;
-        this.documentID = documentID;
-        connections = new ArrayList<>();
     }
 
     public String getUserID() {
@@ -143,6 +130,4 @@ public class User {
     public void setIsProfileCreated(boolean isCreated) {
         isProfileCreated = isCreated;
     }
-
-    public User(){}
 }

@@ -25,25 +25,16 @@ public class Closely extends AppCompatActivity  {
     NFCManager nfcManager;
     User loggedInUser;
 
-    public void onLogin() {
-        loadLoggedInUser();
-    }
-
     public User getLoggedInUser() {
         return loggedInUser;
     }
 
-    private void loadLoggedInUser() {
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
 
-            User.loadUser(userID, new User.OnLoaded() {
-                @Override
-                public void OnLoaded(User loadedUser) {
-                    loggedInUser = loadedUser;
-                }
-            });
-        }
+    public NFCManager getNfcManager() {
+        return nfcManager;
     }
 
     @Override
@@ -57,15 +48,6 @@ public class Closely extends AppCompatActivity  {
     @Override
     public void onResume() {
         super.onResume();
-
-        if(loggedInUser == null) {
-            loadLoggedInUser();
-        }
-
-        // Check to see that the Activity started due to an Android Beam
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-            nfcManager.receiveNfcMessage(getIntent());
-        }
     }
 
     @Override

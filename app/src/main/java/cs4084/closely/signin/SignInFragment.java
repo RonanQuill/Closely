@@ -87,10 +87,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 FirebaseUser user = auth.getCurrentUser();
                                 Log.d(TAG, "Signed in user: " + user.getEmail());
 
-                                //TODO redirect user to home page
-                                Closely closely = (Closely)getActivity();
-                                closely.onLogin();
-
                                 Navigation.findNavController(getView()).navigate(R.id.action_signInFragment_to_navigationFragment);
                             } else {
                                 // If sign in fails, display a message to the user.
