@@ -69,8 +69,6 @@ public class PostFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button post = view.findViewById(R.id.post_button);
-        ImageButton postImg = view.findViewById(R.id.imageButton_postblog);
-        postImg.setOnClickListener(this);
         post.setOnClickListener(this);
         Log.d("click", " added");
     }
@@ -81,7 +79,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.post_button:
                 postBlog();
-            case R.id.imageButton_postblog:
+            case R.id.create_blog_image:
                 addImg();
         }
     }
