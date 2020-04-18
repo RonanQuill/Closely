@@ -68,6 +68,7 @@ public class ViewBlogFragment extends Fragment {
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
         TextView authorView = view.findViewById(R.id.view_blog_author);
         TextView bodyView = view.findViewById(R.id.view_blog_body);
+        TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
         ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
         final ImageView imageView =  view.findViewById(R.id.imageView2);
@@ -88,6 +89,10 @@ public class ViewBlogFragment extends Fragment {
                 Glide.with(getContext()).load(blog.getBlogImage()).into(blogImageView);
             } else {
                 blogImageView.setVisibility(View.GONE);
+            }
+
+            if (blog.getCommentList().size() == 0) {
+                commentTitleText.setVisibility(View.GONE);
             }
         }
         return view;
