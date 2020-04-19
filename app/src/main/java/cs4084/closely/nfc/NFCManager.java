@@ -1,6 +1,5 @@
 package cs4084.closely.nfc;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -9,8 +8,6 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Parcelable;
 import android.widget.Toast;
-
-import androidx.fragment.app.DialogFragment;
 
 import cs4084.closely.Closely;
 import cs4084.closely.acceptconnection.AcceptConnectionDialog;
@@ -72,7 +69,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
                 //Display that XY wants to connect but you must be logged in
                     showLogInToAddConnectionDialog(connectionRequestUser);
                 } else {
-                    if(loggedInUser.getUserID() != userId && !loggedInUser.getConnections().contains(userId)) {
+                    if(loggedInUser.getUserID().equals(userId) && !loggedInUser.getConnections().contains(userId)) {
                         showAddConnectionDialog(connectionRequestUser);
                     }
                 }
