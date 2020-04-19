@@ -24,7 +24,7 @@ import cs4084.closely.Closely;
 import cs4084.closely.R;
 
 
-public class SignInFragment extends Fragment implements View.OnClickListener {
+public class SignInFragment extends Fragment {
     private static final String TAG = "SignInFragment";
 
     private FirebaseAuth auth;
@@ -50,17 +50,16 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button signInButton = view.findViewById(R.id.sign_in_btn);
-        signInButton.setOnClickListener(this);
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_btn:
+        Button signInButton = view.findViewById(R.id.sign_in_btn);
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 signIn();
-                break;
-        }
+            }
+        });
+
     }
 
     private void signIn() {
