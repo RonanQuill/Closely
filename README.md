@@ -1,4 +1,4 @@
 # Closely
-Hottest new social media app to hit UL 🔥🚀🔥🚀🔥🚀🔥🚀🔥🚀🔥🚀
+Closely is a social media blogging app where you connect with other users using NFC.
 
-Use https://github.com/RonanQuill/Closely-NFCSpoofing/tree/master to test nfc
+To test our NFC features in an andoird emulator you can use the following app that we made to emulate an NFC intent being created https://github.com/RonanQuill/Closely-NFCSpoofing/tree/master.
