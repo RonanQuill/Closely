@@ -3,19 +3,7 @@ package cs4084.closely;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReentrantLock;
 
 import cs4084.closely.nfc.NFCManager;
 import cs4084.closely.user.User;
@@ -43,11 +31,6 @@ public class Closely extends AppCompatActivity  {
         setContentView(R.layout.activity_closely);
 
         nfcManager = new NFCManager(this, this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
