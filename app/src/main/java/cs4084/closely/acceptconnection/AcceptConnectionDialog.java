@@ -12,7 +12,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import cs4084.closely.Closely;
 import cs4084.closely.R;
@@ -66,6 +69,16 @@ public class AcceptConnectionDialog extends DialogFragment {
 
         final TextView messageText = dialogView.findViewById(R.id.messageText);
         messageText.setText(connectionRequestUser.getUsername() + " wants to connect with you");
+
+        final ImageView acceptConnectionProfileImage = dialogView.findViewById(R.id.acceptConnectionProfileImage);
+        acceptConnectionProfileImage.setClipToOutline(true);
+        if (connectionRequestUser.getProfileURI() != null && !connectionRequestUser.getProfileURI().isEmpty()) {
+            Glide.with(getContext()).load(connectionRequestUser.getProfileURI())
+                    .into(acceptConnectionProfileImage);
+        } else {
+            String imgRequest = "https://api.adorable.io/avatars/285/" + connectionRequestUser.getUserID() + ".png";
+            Glide.with(getContext()).load(imgRequest).into(acceptConnectionProfileImage);
+        }
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
