@@ -27,7 +27,7 @@ import cs4084.closely.R;
 import cs4084.closely.user.User;
 
 
-public class SignUpFragment extends Fragment implements View.OnClickListener {
+public class SignUpFragment extends Fragment {
     private static final String TAG = "SignUpFragment";
 
     private EditText emailField;
@@ -55,7 +55,12 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        signUpBtn.setOnClickListener(this);
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAccount(emailField.getText().toString(), passwordField.getText().toString());
+            }
+        });
 
     }
 
@@ -132,14 +137,5 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                         R.id.action_signUpFragment_to_editProfileFragment2, bundle);
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_up_btn:
-                createAccount(emailField.getText().toString(), passwordField.getText().toString());
-                break;
-        }
     }
 }
