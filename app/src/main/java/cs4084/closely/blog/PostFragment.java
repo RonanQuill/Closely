@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -124,7 +123,9 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                 if (newImage != null) {
                     saveToFirestore(newImage, b.getDocumentId());
                 }
-                Navigation.findNavController(getView()).navigate(R.id.action_postFragment_to_blogListFragment);
+                if (getView() != null) {
+                    Navigation.findNavController(getView()).navigate(R.id.action_postFragment_to_blogListFragment);
+                }
             }
         });
 
@@ -180,13 +181,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
     private void addBlogImage(String blogImageURI, String blogId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference blogReference = db.collection("blogs").document(blogId);
-        blogReference.update("blogImage", blogImageURI).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: Did mans ting hapen fam");
-                Toast.makeText(getContext(), "blog image added", Toast.LENGTH_SHORT).show();
-            }
-        });
+        blogReference.update("blogImage", blogImageURI);
     }
 
 }

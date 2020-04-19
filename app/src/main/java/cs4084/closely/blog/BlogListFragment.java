@@ -132,6 +132,7 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
         Query query;
         if (currentUser != null) {
             if (currentUser.getConnections().size() == 0) {
+                Log.d(TAG, "getConnectionBlogs: user has no connections");
                 pb.setVisibility(View.GONE);
                 blogListLayout.setVisibility(View.VISIBLE);
                 noBlogsText.setVisibility(View.VISIBLE);
@@ -162,12 +163,7 @@ public class BlogListFragment extends Fragment implements BlogRecyclerViewAdapte
                                     .get(task.getResult().size() - 1);
                         }
                         adapter.notifyDataSetChanged();
-                        if (blogs.size() == 0) {
-                            getView().findViewById(R.id.blog_list_empty_text).setVisibility(View.VISIBLE);
 
-                        } else {
-
-                        }
                         // remove progress and show data
                         if (blogs.size() == 0) {
                             noBlogsText.setVisibility(View.VISIBLE);
