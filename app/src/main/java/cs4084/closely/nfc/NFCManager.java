@@ -69,7 +69,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
                 //Display that XY wants to connect but you must be logged in
                     showLogInToAddConnectionDialog(connectionRequestUser);
                 } else {
-                    if(loggedInUser.getUserID().equals(userId) && !loggedInUser.getConnections().contains(userId)) {
+                    if(!loggedInUser.getUserID().equals(userId) && !loggedInUser.getConnections().contains(userId)) {
                         showAddConnectionDialog(connectionRequestUser);
                     }
                 }
