@@ -58,7 +58,7 @@ public class NavigationFragment extends Fragment {
             if(FirebaseAuth.getInstance().getCurrentUser() != null) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                User.loadUser(userID, new User.OnLoaded() {
+                User.loadUser(userID, new User.OnLoadedEvent() {
                     @Override
                     public void OnLoaded(User loadedUser) {
                         closely.setLoggedInUser(loadedUser);
@@ -86,7 +86,7 @@ public class NavigationFragment extends Fragment {
             if(FirebaseAuth.getInstance().getCurrentUser() != null) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                User.loadUser(userID, new User.OnLoaded() {
+                User.loadUser(userID, new User.OnLoadedEvent() {
                     @Override
                     public void OnLoaded(User loadedUser) {
                         closely.setLoggedInUser(loadedUser);

@@ -21,7 +21,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -151,7 +150,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadAndDisplayUserProfile(String userID) {
-        User.loadUser(userID, new User.OnLoaded() {
+        User.loadUser(userID, new User.OnLoadedEvent() {
             @Override
             public void OnLoaded(User loadedUser) {
                 user = loadedUser;

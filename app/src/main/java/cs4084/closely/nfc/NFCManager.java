@@ -62,7 +62,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
 
         final User loggedInUser = closely.getLoggedInUser();
 
-        User.loadUser(userId, new User.OnLoaded() {
+        User.loadUser(userId, new User.OnLoadedEvent() {
             @Override
             public void OnLoaded(User connectionRequestUser) {
                 if(loggedInUser == null) {
