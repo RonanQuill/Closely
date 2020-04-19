@@ -48,21 +48,12 @@ public class AcceptConnectionDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_accept_connection, container, false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 
     @NonNull
     @Override
@@ -73,7 +64,6 @@ public class AcceptConnectionDialog extends DialogFragment {
 
         View dialogView = inflater.inflate(R.layout.fragment_accept_connection, null);
 
-        //setUserData();
         final TextView messageText = dialogView.findViewById(R.id.messageText);
         messageText.setText(connectionRequestUser.getUsername() + " wants to connect with you");
 
