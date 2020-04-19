@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
@@ -40,9 +41,10 @@ import cs4084.closely.user.User;
 
 
 public class ProfileFragment extends Fragment {
-
+    private static final String TAG = "ProfileFragment";
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
+    ProfileViewPagerAdapter profileViewPagerAdapter;
 
     private ViewGroup profileView;
     private TextView usernameTextView;
@@ -111,7 +113,7 @@ public class ProfileFragment extends Fragment {
         profilePostsFragment = new ProfilePostsFragment(posts);
         profileConnectionsFragment = new ProfileConnectionsFragment(connections);
 
-        ProfileViewPagerAdapter profileViewPagerAdapter = new ProfileViewPagerAdapter(this);
+        profileViewPagerAdapter = new ProfileViewPagerAdapter(this);
         profileViewPagerAdapter.addFragment(profilePostsFragment);
         profileViewPagerAdapter.addFragment(profileConnectionsFragment);
 
@@ -122,14 +124,6 @@ public class ProfileFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
         profileView.setVisibility(View.GONE);
-
-        loadAndDisplayUserProfile(userID);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         final String[] titles = new String[]{"Posts", "Connections"};
         new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -146,7 +140,14 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        return view;
+    }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadAndDisplayUserProfile(userID);
     }
 
     private void loadAndDisplayUserProfile(String userID) {
@@ -172,7 +173,6 @@ public class ProfileFragment extends Fragment {
                     for(QueryDocumentSnapshot documentSnapshot : querySnapshot) {
                         posts.add(documentSnapshot.toObject(Blog.class));
                     }
-
                     displayPostsForUser();
                 }
             }
@@ -195,8 +195,8 @@ public class ProfileFragment extends Fragment {
                         for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
                             connections.add(documentSnapshot.toObject(Connection.class));
                         }
-
                         profileConnectionsFragment.notifyDataSetChanged();
+                        viewPager2.setAdapter(profileViewPagerAdapter);
                     }
                 }
             });

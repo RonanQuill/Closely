@@ -184,7 +184,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "onSuccess: Did mans ting hapen fam");
-                Toast.makeText(getActivity(), "blog image added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "blog image added", Toast.LENGTH_SHORT).show();
             }
         });
     }

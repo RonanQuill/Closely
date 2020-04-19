@@ -35,15 +35,13 @@ public class ProfilePostsFragment extends Fragment implements ProfilePostsRecycl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
-        Log.d(TAG, "onCreate: " + posts.size());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d(TAG, "onCreateView: Profile Post");
+        Log.d(TAG, "onCreateView: View Created");
         View view = inflater.inflate(R.layout.fragment_profile_posts, container, false);
         profilePostsRecyclerViewAdapter = new ProfilePostsRecyclerViewAdapter(posts, this);
 
@@ -55,6 +53,7 @@ public class ProfilePostsFragment extends Fragment implements ProfilePostsRecycl
 
     public void notifyDataSetChanged() {
         if (profilePostsRecyclerViewAdapter != null) {
+            Log.d(TAG, "notifyDataSetChanged: ");
             profilePostsRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
