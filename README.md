@@ -29,8 +29,8 @@ Features still being worked on
 - Minor Bug Fixes
 
 ## Users
-| UID        | Username           | Number of Posts  | password
-| ------------- |:-------------:| -----:|:--------:
-| VSDTqD2Kxjhv72kGu1KW5XvI6z62      | User 1 | 9| password |
-| aNW8sh1ltONghyHzYCzSjk3omkE2      | user 4     |   4 | password |
-| 2FDtyKEfsKNdkky4n8c8qTYxLQr1| User2      |    0 | password |
+| UID        | Username           | Number of Posts  | Email| password
+| ------------- |:-------------:| -----:|:--------: | :--------: |
+| VSDTqD2Kxjhv72kGu1KW5XvI6z62      | User 1 | 9| user@email.com | password |
+| aNW8sh1ltONghyHzYCzSjk3omkE2      | user 4     |   4 |user4@email.com|  password |
+| 2FDtyKEfsKNdkky4n8c8qTYxLQr1| User2      |    0 |user1@email.com| password |
