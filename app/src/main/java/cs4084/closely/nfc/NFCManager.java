@@ -29,10 +29,10 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         // Check for available NFC Adapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
-        /*if (nfcAdapter == null) {
+        if (nfcAdapter == null) {
             Toast.makeText(context, "NFC is not available on this device.", Toast.LENGTH_LONG).show();
             return;
-        }*/
+        }
 
         // Register callback
         nfcAdapter.setNdefPushMessageCallback(this, closely);
@@ -69,7 +69,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
                 //Display that XY wants to connect but you must be logged in
                     showLogInToAddConnectionDialog(connectionRequestUser);
                 } else {
-                    if(loggedInUser.getUserID().equals(userId) && !loggedInUser.getConnections().contains(userId)) {
+                    if(!loggedInUser.getUserID().equals(userId) && !loggedInUser.getConnections().contains(userId)) {
                         showAddConnectionDialog(connectionRequestUser);
                     }
                 }
