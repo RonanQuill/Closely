@@ -56,7 +56,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         Bundle bundle = getArguments();
         if (bundle != null) {
             isNewUser = bundle.getBoolean("IsNewUser");
-            Log.d("yeet", "onCreate: new user" + isNewUser);
         }
     }
 
@@ -74,7 +73,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         TextView editBioTextView = v.findViewById(R.id.edit_profile_bio_text);
         TextView editUsernameTextView = v.findViewById(R.id.edit_profile_username_text);
         if (isNewUser) {
-
             editBioTextView.setText("Create Bio");
             editUsernameTextView.setText("Create username");
         } else {

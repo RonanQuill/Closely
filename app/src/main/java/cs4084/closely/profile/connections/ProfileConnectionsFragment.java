@@ -21,7 +21,7 @@ public class ProfileConnectionsFragment extends Fragment implements ProfileConne
     private ProfileConnectionsRecyclerViewAdapter profileConnectionsRecyclerViewAdapter;
     private RecyclerView connectionsRecyclerView;
     private List<Connection> connectionList;
-    private static final String TAG = "ProfileConnectionsFragm";
+    private static final String TAG = "ProfileConnectionsFrag";
 
     public ProfileConnectionsFragment() {
         // Required empty public constructor
@@ -35,14 +35,13 @@ public class ProfileConnectionsFragment extends Fragment implements ProfileConne
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment#
-        Log.d(TAG, "onCreateView: Profile connections ");
+        // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView: Creating view");
         View view = inflater.inflate(R.layout.fragment_profile_connections, container, false);
         profileConnectionsRecyclerViewAdapter = new ProfileConnectionsRecyclerViewAdapter(connectionList, this);
 
@@ -55,7 +54,6 @@ public class ProfileConnectionsFragment extends Fragment implements ProfileConne
     public void notifyDataSetChanged() {
         if (profileConnectionsRecyclerViewAdapter != null) {
             profileConnectionsRecyclerViewAdapter.notifyDataSetChanged();
-
         }
     }
 
