@@ -2,7 +2,6 @@ package cs4084.closely.navigation;
 
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import cs4084.closely.Closely;
 import cs4084.closely.R;
 import cs4084.closely.user.User;
 
-
 public class NavigationFragment extends Fragment {
 
     private ConstraintLayout progressBarLayout;
@@ -30,11 +28,6 @@ public class NavigationFragment extends Fragment {
 
     public NavigationFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -75,6 +68,9 @@ public class NavigationFragment extends Fragment {
                     }
                 });
             }
+        } else {
+            progressBarLayout.setVisibility(View.GONE);
+            navigationLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -105,6 +101,9 @@ public class NavigationFragment extends Fragment {
                     }
                 });
             }
+        } else {
+            progressBarLayout.setVisibility(View.GONE);
+            navigationLayout.setVisibility(View.VISIBLE);
         }
     }
 
