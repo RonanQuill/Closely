@@ -27,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -40,6 +40,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class ViewBlogFragment extends Fragment {
 
     private Blog blog;
+    private ArrayList<Comment> blogComments;
     private CommentRecyclerViewAdapter adapter;
     private User currentUser;
 
@@ -62,13 +63,13 @@ public class ViewBlogFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_blog, container, false);
         TextView titleView = view.findViewById(R.id.view_blog_title);
-        initRecyclerView(view);
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
         TextView authorView = view.findViewById(R.id.view_blog_author);
         TextView bodyView = view.findViewById(R.id.view_blog_body);
         TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
         ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
+        blogComments = new ArrayList<Comment>();
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +83,7 @@ public class ViewBlogFragment extends Fragment {
             subtitleView.setText(blog.getSubtitle());
             authorView.setText(blog.getAuthor());
             bodyView.setText(blog.getBody());
-            if(blog.getBlogImage() != null && !blog.getBlogImage().isEmpty()) {
+            if (blog.getBlogImage() != null && !blog.getBlogImage().isEmpty()) {
                 Log.d(TAG, "onCreateView: " + blog.getBlogImage());
                 Glide.with(getContext()).load(blog.getBlogImage()).into(blogImageView);
             } else {
@@ -92,11 +93,15 @@ public class ViewBlogFragment extends Fragment {
             if (blog.getCommentList().size() == 0) {
                 commentTitleText.setVisibility(View.GONE);
             }
+
+            blogComments = (ArrayList<Comment>) blog.getCommentList();
         }
+
+        initRecyclerView(view);
         return view;
     }
 
-    private void getUsername () {
+    private void getUsername() {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").whereEqualTo("userID", userID)
@@ -114,20 +119,23 @@ public class ViewBlogFragment extends Fragment {
                     }
                 });
     }
+
     private void postComment() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference washingtonRef = db.collection("blogs").document(blog.getDocumentId());
-        TextView content = getView().findViewById(R.id.view_blog_comment_content);
+        DocumentReference blogRef = db.collection("blogs").document(blog.getDocumentId());
+        final TextView content = getView().findViewById(R.id.view_blog_comment_content);
         if (!content.getText().toString().isEmpty()) {
-            Map<String, String> comments = blog.getComments();
-            comments.put(currentUser.getUsername(), content.getText().toString());
-            washingtonRef
-                    .update("comments", comments)
+            blog.getComments().put(currentUser.getUsername(), content.getText().toString());
+            blogRef.update("comments", blog.getComments())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getActivity(), "Comment posted",
-                                    Toast.LENGTH_SHORT).show();}
+                                    Toast.LENGTH_SHORT).show();
+                            blogComments.clear();
+                            blogComments.addAll(blog.getCommentList());
+                            adapter.notifyDataSetChanged();
+                        }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -138,12 +146,13 @@ public class ViewBlogFragment extends Fragment {
 
 
         } else {
-            Toast.makeText(getActivity(), "Comments cannot be empty",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Comments cannot be empty", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.comment_recycler_view);
-        adapter = new CommentRecyclerViewAdapter(blog.getCommentList());
+        adapter = new CommentRecyclerViewAdapter(blogComments);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }

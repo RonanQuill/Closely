@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +19,6 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +29,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -75,12 +75,13 @@ public class PostFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.d("Button pressed", "onClick: ");
         switch (v.getId()) {
             case R.id.post_button:
                 postBlog();
+                break;
             case R.id.create_blog_image:
                 addImg();
+                break;
         }
     }
 
@@ -113,19 +114,24 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                 content.getText().toString(),
                 user.getUsername(),
                 FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                null);
+                new HashMap<String, String>());
+
         DocumentReference blogref = db.collection("blogs").document();
         b.setDocumentId(blogref.getId());
         blogref.set(b).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                saveToFirestore(newImage,b.getDocumentId());
+                if (newImage != null) {
+                    saveToFirestore(newImage, b.getDocumentId());
+                }
                 Navigation.findNavController(getView()).navigate(R.id.action_postFragment_to_blogListFragment);
             }
         });
 
     }
+
     private void addImg() {
+        Log.d(TAG, "addImg: Opening Camera ya goob");
         Intent cameraIntent = new Intent(Intent.ACTION_GET_CONTENT);
         cameraIntent.setType("image/*");
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
