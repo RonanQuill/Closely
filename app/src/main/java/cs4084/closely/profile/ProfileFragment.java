@@ -229,6 +229,7 @@ public class ProfileFragment extends Fragment {
     private void displayPostsForUser() {
         numberOfPostsTextView.setText("Number of Posts: " + posts.size());
         profilePostsFragment.notifyDataSetChanged();
+        viewPager2.setAdapter(profileViewPagerAdapter);
     }
 
     private String getMemberSinceDate() {
