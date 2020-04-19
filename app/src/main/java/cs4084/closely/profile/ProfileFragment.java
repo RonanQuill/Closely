@@ -161,7 +161,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getPostsForUser() {
-        if (posts.size() > 0) posts.clear();
+        if (!posts.isEmpty()) {
+            posts.clear();
+        }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("blogs").whereEqualTo("userID", user.getUserID()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -180,7 +182,7 @@ public class ProfileFragment extends Fragment {
 
     private void getConnectionsForUser() {
         List<String> userConnections = user.getConnections();
-        if (connections != null && connections.size() > 0) {
+        if (connections != null && !connections.isEmpty()) {
             connections.clear();
         }
         if(userConnections != null && !userConnections.isEmpty()) {
