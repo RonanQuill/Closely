@@ -29,10 +29,10 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         // Check for available NFC Adapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
-        if (nfcAdapter == null) {
+        /*if (nfcAdapter == null) {
             Toast.makeText(context, "NFC is not available on this device.", Toast.LENGTH_LONG).show();
             return;
-        }
+        }*/
 
         // Register callback
         nfcAdapter.setNdefPushMessageCallback(this, closely);
