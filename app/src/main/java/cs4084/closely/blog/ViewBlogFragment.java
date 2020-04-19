@@ -27,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -38,12 +38,10 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  * A simple {@link Fragment} subclass.
  */
 public class ViewBlogFragment extends Fragment {
-    private Blog blog;
-    CommentRecyclerViewAdapter adapter;
-    private User currentUser;
-    private static final int IMAGE_PICK_CODE = 1000;
-    private static final int PERMISSION_CODE = 1001;
 
+    private Blog blog;
+    private CommentRecyclerViewAdapter adapter;
+    private User currentUser;
 
     public ViewBlogFragment() {
         // Required empty public constructor
@@ -71,7 +69,7 @@ public class ViewBlogFragment extends Fragment {
         TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
         ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
-        final ImageView imageView =  view.findViewById(R.id.imageView2);
+
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +119,7 @@ public class ViewBlogFragment extends Fragment {
         DocumentReference washingtonRef = db.collection("blogs").document(blog.getDocumentId());
         TextView content = getView().findViewById(R.id.view_blog_comment_content);
         if (!content.getText().toString().isEmpty()) {
-            HashMap<String, String> comments = blog.getComments();
+            Map<String, String> comments = blog.getComments();
             comments.put(currentUser.getUsername(), content.getText().toString());
             washingtonRef
                     .update("comments", comments)
@@ -129,7 +127,7 @@ public class ViewBlogFragment extends Fragment {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getActivity(), "Comment posted",
-                                    Toast.LENGTH_SHORT).show();                        }
+                                    Toast.LENGTH_SHORT).show();}
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override

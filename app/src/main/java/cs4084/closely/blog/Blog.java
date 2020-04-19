@@ -7,6 +7,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Blog implements Parcelable {
@@ -18,17 +19,18 @@ public class Blog implements Parcelable {
     private String blogImage;
     private String documentId;
     private Timestamp datePosted;
-    HashMap<String, String> comments = new HashMap<String, String>();
+    private Map<String, String> comments = new HashMap<>();
 
     public Blog() {
     }
 
-    public Blog(String title, String subtitle, String body, String author, String userID,HashMap<String, String> comments) {
+    public Blog(String title, String subtitle, String body, String author, String userID, Map<String, String> comments) {
         this.title = title;
         this.subtitle = subtitle;
         this.body = body;
         this.author = author;
         this.userID = userID;
+        this.comments = comments;
     }
 
     public Blog(Parcel parcel) {
@@ -38,11 +40,11 @@ public class Blog implements Parcelable {
         author = parcel.readString();
         userID = parcel.readString();
     }
-    public HashMap<String, String> getComments() {
+    public Map<String, String> getComments() {
         return comments;
     }
 
-    public void setComments(HashMap<String, String> comments) {
+    public void setComments(Map<String, String> comments) {
         this.comments = comments;
     }
 
@@ -73,7 +75,6 @@ public class Blog implements Parcelable {
     public String toString() {
         return title + ", " + author + "\n";
     }
-
 
     public static final Parcelable.Creator<Blog> CREATOR = new Parcelable.Creator<Blog>() {
         public Blog createFromParcel(Parcel in) {
@@ -114,8 +115,9 @@ public class Blog implements Parcelable {
         this.documentId = documentId;
     }
 
-    public ArrayList<Comment> getCommentList() {
-        ArrayList<Comment> commentList = new ArrayList<>();
+    public List<Comment> getCommentList() {
+        List<Comment> commentList = new ArrayList<>();
+
         for (Map.Entry<String, String> entry : comments.entrySet()) {
             commentList.add(new Comment(entry.getKey(),entry.getValue()));
         }
