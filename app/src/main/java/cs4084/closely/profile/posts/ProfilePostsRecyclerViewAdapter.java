@@ -37,7 +37,7 @@ public class ProfilePostsRecyclerViewAdapter extends RecyclerView.Adapter<Profil
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Blog post = posts.get(position);
         holder.title.setText(post.getTitle());
-        holder.description.setText(post.getBody());
+        holder.description.setText(post.getSubtitle());
     }
 
     @Override
