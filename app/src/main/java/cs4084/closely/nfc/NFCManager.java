@@ -33,10 +33,8 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
         if (nfcAdapter == null) {
-            //Toast.makeText(context, "NFC is not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "NFC is not available on this device.", Toast.LENGTH_LONG).show();
             return;
-        } else {
-            //Toast.makeText(context, "NFC is available", Toast.LENGTH_LONG).show();
         }
 
         // Register callback
@@ -63,26 +61,23 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         NdefMessage message = (NdefMessage) rawMessages[0];
 
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        String userId = new String(message.getRecords()[NFC_USER_ID_ARRAY_INDEX].getPayload());
+        final String userId = new String(message.getRecords()[NFC_USER_ID_ARRAY_INDEX].getPayload());
 
         final User loggedInUser = closely.getLoggedInUser();
 
         User.loadUser(userId, new User.OnLoaded() {
             @Override
             public void OnLoaded(User connectionRequestUser) {
-
                 if(loggedInUser == null) {
                 //Display that XY wants to connect but you must be logged in
                     showLogInToAddConnectionDialog(connectionRequestUser);
                 } else {
-                    showAddConnectionDialog(connectionRequestUser);
+                    if(loggedInUser.getUserID() != userId && !loggedInUser.getConnections().contains(userId)) {
+                        showAddConnectionDialog(connectionRequestUser);
+                    }
                 }
             }
         });
-
-        /*
-        closely.addConnectionToUser(userId);*/
-        //Toast.makeText(context, "Event received", Toast.LENGTH_LONG).show();
     }
 
     private void showAddConnectionDialog(User user) {
@@ -91,6 +86,6 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
     }
 
     private void showLogInToAddConnectionDialog(User user) {
-        Toast.makeText(closely, "Log in to add connections", Toast.LENGTH_LONG).show();
+        Toast.makeText(closely, "Log in to add connections.", Toast.LENGTH_LONG).show();
     }
 }
