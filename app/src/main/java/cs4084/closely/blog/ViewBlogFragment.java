@@ -1,10 +1,17 @@
 package cs4084.closely.blog;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +51,9 @@ public class ViewBlogFragment extends Fragment {
     private CommentRecyclerViewAdapter adapter;
     private User currentUser;
 
+    private WebView webView;
+    private TextView authorView;
+
     public ViewBlogFragment() {
         // Required empty public constructor
     }
@@ -57,6 +67,14 @@ public class ViewBlogFragment extends Fragment {
         }
     }
 
+    private String processBlogPostHtml(String rawHtml) {
+        String defaultStyle =
+                "<link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\">"
+                + "<style>*{color: white; font-family: 'Montserrat', sans-serif;}</style>";
+
+        return /*defaultStyle +*/ rawHtml;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,8 +82,36 @@ public class ViewBlogFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_blog, container, false);
         TextView titleView = view.findViewById(R.id.view_blog_title);
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
-        TextView authorView = view.findViewById(R.id.view_blog_author);
-        TextView bodyView = view.findViewById(R.id.view_blog_body);
+        authorView = view.findViewById(R.id.view_blog_author);
+
+        //TextView bodyView = view.findViewById(R.id.view_blog_body);
+
+        webView = view.findViewById(R.id.blog_post_renderer);
+        webView.setBackgroundColor(Color.TRANSPARENT);
+
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setDefaultTextEncodingName("utf-8");
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                webView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                super.onPageFinished(view, url);
+            }
+        });
+        webView.addJavascriptInterface(this, "MyApp");
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            public boolean onConsoleMessage(ConsoleMessage cm) {
+                Log.d("MyApplication", cm.message() + " -- From line "
+                        + cm.lineNumber() + " of "
+                        + cm.sourceId() );
+                return true;
+            }
+        });
+
         TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
         ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
@@ -82,7 +128,13 @@ public class ViewBlogFragment extends Fragment {
             titleView.setText(blog.getTitle());
             subtitleView.setText(blog.getSubtitle());
             authorView.setText(blog.getAuthor());
-            bodyView.setText(blog.getBody());
+
+
+            String html = blog.getBody();;//processBlogPostHtml(blog.getBody())
+            Log.d("HTML", html);
+
+            webView.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
+
             if (blog.getBlogImage() != null && !blog.getBlogImage().isEmpty()) {
                 Log.d(TAG, "onCreateView: " + blog.getBlogImage());
                 Glide.with(getContext()).load(blog.getBlogImage()).into(blogImageView);
@@ -99,6 +151,19 @@ public class ViewBlogFragment extends Fragment {
 
         initRecyclerView(view);
         return view;
+    }
+
+    @JavascriptInterface
+    public void resize(final float height) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = webView.getLayoutParams();
+                layoutParams.height = (int) (height * getResources().getDisplayMetrics().density);
+                webView.setLayoutParams(layoutParams);
+
+            }
+        });
     }
 
     private void getUsername() {
