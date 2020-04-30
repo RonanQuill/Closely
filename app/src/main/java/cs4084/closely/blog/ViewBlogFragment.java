@@ -83,20 +83,14 @@ public class ViewBlogFragment extends Fragment {
 
         webView = view.findViewById(R.id.blog_post_renderer);
         webView.setBackgroundColor(Color.TRANSPARENT);
-
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setDefaultTextEncodingName("utf-8");
-
         webView.setWebViewClient(new WebViewClient() {
+
             @Override
             public void onPageFinished(WebView view, String url) {
-                webView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                webView.setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
             }
         });
-        webView.addJavascriptInterface(this, "MyApp");
 
         webView.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage cm) {
@@ -106,6 +100,11 @@ public class ViewBlogFragment extends Fragment {
                 return true;
             }
         });
+
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setDefaultTextEncodingName("utf-8");
 
         TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
         ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
@@ -125,6 +124,7 @@ public class ViewBlogFragment extends Fragment {
 
             String html = processBlogPostHtml(blog.getTitle(), blog.getBody());
             Log.d("HTML", html);
+            webView.setVisibility(View.GONE);
             webView.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
 
             if (blog.getBlogImage() != null && !blog.getBlogImage().isEmpty()) {
@@ -149,18 +149,6 @@ public class ViewBlogFragment extends Fragment {
         String htmlDocumentTags ="<!DOCTYPE html><html lang=\"en\"><head><title>%s</title><link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\"><style>*{color: white; font-family: 'Montserrat', sans-serif;}</style></head><body>%s</body></html>";
 
         return String.format(htmlDocumentTags, title, bodyHtml);
-    }
-
-    @JavascriptInterface
-    public void resize(final float height) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams layoutParams = webView.getLayoutParams();
-                layoutParams.height = (int) (height * getResources().getDisplayMetrics().density);
-                webView.setLayoutParams(layoutParams);
-            }
-        });
     }
 
     private void postCommentForCurrentUser() {
