@@ -14,6 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Map;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -47,12 +49,13 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  */
 public class ViewBlogFragment extends Fragment {
 
+    private User currentUser;
     private Blog blog;
     private List<Comment> blogComments;
-    private CommentRecyclerViewAdapter adapter;
-    private User currentUser;
 
     private WebView webView;
+    private EditText writeCommentBox;
+    private CommentRecyclerViewAdapter commentRecyclerViewAdapter;
 
     public ViewBlogFragment() {
         // Required empty public constructor
@@ -67,12 +70,6 @@ public class ViewBlogFragment extends Fragment {
         }
     }
 
-    private String processBlogPostHtml(String title, String bodyHtml) {
-        String htmlDocumentTags ="<!DOCTYPE html><html lang=\"en\"><head><title>%s</title><link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\"><style>*{color: white; font-family: 'Montserrat', sans-serif;}</style></head><body>%s</body></html>";
-
-        return String.format(htmlDocumentTags, title, bodyHtml);
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +79,8 @@ public class ViewBlogFragment extends Fragment {
         TextView titleView = view.findViewById(R.id.view_blog_title);
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
         TextView authorView = view.findViewById(R.id.view_blog_author);
+
+        writeCommentBox = view.findViewById(R.id.view_blog_comment_content);
 
         webView = view.findViewById(R.id.blog_post_renderer);
         webView.setBackgroundColor(Color.TRANSPARENT);
@@ -147,6 +146,12 @@ public class ViewBlogFragment extends Fragment {
         return view;
     }
 
+    private String processBlogPostHtml(String title, String bodyHtml) {
+        String htmlDocumentTags ="<!DOCTYPE html><html lang=\"en\"><head><title>%s</title><link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\"><style>*{color: white; font-family: 'Montserrat', sans-serif;}</style></head><body>%s</body></html>";
+
+        return String.format(htmlDocumentTags, title, bodyHtml);
+    }
+
     @JavascriptInterface
     public void resize(final float height) {
         getActivity().runOnUiThread(new Runnable() {
@@ -155,7 +160,6 @@ public class ViewBlogFragment extends Fragment {
                 ViewGroup.LayoutParams layoutParams = webView.getLayoutParams();
                 layoutParams.height = (int) (height * getResources().getDisplayMetrics().density);
                 webView.setLayoutParams(layoutParams);
-
             }
         });
     }
@@ -182,18 +186,23 @@ public class ViewBlogFragment extends Fragment {
     private void postComment() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference blogRef = db.collection("blogs").document(blog.getDocumentId());
-        final TextView content = getView().findViewById(R.id.view_blog_comment_content);
-        if (!content.getText().toString().isEmpty()) {
-            blog.getComments().put(currentUser.getUsername(), content.getText().toString());
-            blogRef.update("comments", blog.getComments())
+
+        String commentContent = writeCommentBox.getText().toString();
+        if (!commentContent.isEmpty()) {
+
+            Map<String, String> currentBlogComments = blog.getComments();
+            currentBlogComments.put(currentUser.getUsername(), commentContent);
+
+            blogRef.update("comments", currentBlogComments)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(getActivity(), "Comment posted",
-                                    Toast.LENGTH_SHORT).show();
-                            blogComments.clear();
-                            blogComments.addAll(blog.getCommentList());
-                            adapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity(), "Comment posted", Toast.LENGTH_SHORT).show();
+
+                            blogComments = blog.getCommentList();
+
+                            commentRecyclerViewAdapter.notifyDataSetChanged();
+                            writeCommentBox.setText("");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -211,8 +220,8 @@ public class ViewBlogFragment extends Fragment {
 
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.comment_recycler_view);
-        adapter = new CommentRecyclerViewAdapter(blogComments);
-        recyclerView.setAdapter(adapter);
+        commentRecyclerViewAdapter = new CommentRecyclerViewAdapter(blogComments);
+        recyclerView.setAdapter(commentRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 

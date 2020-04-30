@@ -100,6 +100,7 @@ public class Blog implements Parcelable {
         dest.writeString(author);
         dest.writeString(userID);
     }
+
     public String getBlogImage() {
         return blogImage;
     }
@@ -107,6 +108,7 @@ public class Blog implements Parcelable {
     public void setBlogImage(String blogImage) {
         this.blogImage = blogImage;
     }
+
     public String getDocumentId() {
         return documentId;
     }
@@ -121,6 +123,7 @@ public class Blog implements Parcelable {
         for (Map.Entry<String, String> entry : comments.entrySet()) {
             commentList.add(new Comment(entry.getKey(),entry.getValue()));
         }
+
         return commentList;
     }
 }
