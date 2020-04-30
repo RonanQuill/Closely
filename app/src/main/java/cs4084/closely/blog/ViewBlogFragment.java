@@ -1,5 +1,6 @@
 package cs4084.closely.blog;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import cs4084.closely.R;
 import cs4084.closely.user.User;
@@ -47,12 +48,11 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class ViewBlogFragment extends Fragment {
 
     private Blog blog;
-    private ArrayList<Comment> blogComments;
+    private List<Comment> blogComments;
     private CommentRecyclerViewAdapter adapter;
     private User currentUser;
 
     private WebView webView;
-    private TextView authorView;
 
     public ViewBlogFragment() {
         // Required empty public constructor
@@ -67,14 +67,13 @@ public class ViewBlogFragment extends Fragment {
         }
     }
 
-    private String processBlogPostHtml(String rawHtml) {
-        String defaultStyle =
-                "<link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\">"
-                + "<style>*{color: white; font-family: 'Montserrat', sans-serif;}</style>";
+    private String processBlogPostHtml(String title, String bodyHtml) {
+        String htmlDocumentTags ="<!DOCTYPE html><html lang=\"en\"><head><title>%s</title><link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\"><style>*{color: white; font-family: 'Montserrat', sans-serif;}</style></head><body>%s</body></html>";
 
-        return /*defaultStyle +*/ rawHtml;
+        return String.format(htmlDocumentTags, title, bodyHtml);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,9 +81,7 @@ public class ViewBlogFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_blog, container, false);
         TextView titleView = view.findViewById(R.id.view_blog_title);
         TextView subtitleView = view.findViewById(R.id.view_blog_subtitle);
-        authorView = view.findViewById(R.id.view_blog_author);
-
-        //TextView bodyView = view.findViewById(R.id.view_blog_body);
+        TextView authorView = view.findViewById(R.id.view_blog_author);
 
         webView = view.findViewById(R.id.blog_post_renderer);
         webView.setBackgroundColor(Color.TRANSPARENT);
@@ -115,7 +112,6 @@ public class ViewBlogFragment extends Fragment {
         TextView commentTitleText = view.findViewById(R.id.view_blog_comment_text);
         ImageView blogImageView = view.findViewById(R.id.imageView_viewBlog);
         Button postComment = view.findViewById(R.id.view_blog_add_comment);
-        blogComments = new ArrayList<Comment>();
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,10 +125,8 @@ public class ViewBlogFragment extends Fragment {
             subtitleView.setText(blog.getSubtitle());
             authorView.setText(blog.getAuthor());
 
-
-            String html = blog.getBody();;//processBlogPostHtml(blog.getBody())
+            String html = processBlogPostHtml(blog.getTitle(), blog.getBody());
             Log.d("HTML", html);
-
             webView.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
 
             if (blog.getBlogImage() != null && !blog.getBlogImage().isEmpty()) {
@@ -142,11 +136,11 @@ public class ViewBlogFragment extends Fragment {
                 blogImageView.setVisibility(View.GONE);
             }
 
-            if (blog.getCommentList().size() == 0) {
+            blogComments = blog.getCommentList();
+            if (blogComments.isEmpty()) {
                 commentTitleText.setVisibility(View.GONE);
             }
 
-            blogComments = (ArrayList<Comment>) blog.getCommentList();
         }
 
         initRecyclerView(view);
