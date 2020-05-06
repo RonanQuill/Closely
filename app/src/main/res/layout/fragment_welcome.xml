@@ -8,6 +8,48 @@
     android:background="@color/background"
     tools:context=".welcome.WelcomeFragment">
 
+    <LinearLayout
+        android:id="@+id/welcome_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35px"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/main_img" />
+
+        <TextView
+            android:id="@+id/welcome_splash_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Closely"
+            android:textColor="#FFFFFF"
+            android:textSize="60sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/welcome_splash_slogan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Blogging for the few"
+            android:textColor="#80FFFFFF"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="270dp"
@@ -18,6 +60,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/signInButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -33,6 +76,7 @@
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -47,16 +91,18 @@
         android:textAllCaps="false"
         android:textColor="@color/background"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/signUpButton"
         app:layout_constraintStart_toStartOf="@+id/signUpButton" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="411dp"
+        android:id="@+id/welcome_image"
+        android:layout_width="0dp"
         android:layout_height="393dp"
         android:alpha="0.3"
         android:scaleType="centerInside"
         android:src="@drawable/ic_main_illu"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/welcomeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

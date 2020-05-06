@@ -5,6 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,6 +29,10 @@ public class WelcomeFragment extends Fragment {
 
     private Button signUpButton;
     private Button signInButton;
+    private LinearLayout splashScreen;
+    private TextView welcomeText;
+    private ImageView welcomeImage;
+    private boolean userLoggedIn = true;
 
     public WelcomeFragment() {
         // Required empty public constructor
@@ -37,20 +44,31 @@ public class WelcomeFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             checkForLoggedInUser();
+        } else {
+            userLoggedIn = false;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_welcome, container, false);
+        View view = inflater.inflate(R.layout.fragment_welcome, container, false);
+        splashScreen = view.findViewById(R.id.welcome_splash);
+        welcomeImage = view.findViewById(R.id.welcome_image);
+        welcomeText = view.findViewById(R.id.welcomeText);
+        signInButton = view.findViewById(R.id.signInButton);
+        signUpButton = view.findViewById(R.id.signUpButton);
+        if (!userLoggedIn) {
+            unHideWelcome();
+        }
+
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        signInButton = view.findViewById(R.id.signInButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +76,6 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        signUpButton = view.findViewById(R.id.signUpButton);
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +95,6 @@ public class WelcomeFragment extends Fragment {
                     if (document.exists()) {
                         User user = document.toObject(User.class);
                         navigateAway(user);
-
                     }
                 }
             }
@@ -96,5 +112,13 @@ public class WelcomeFragment extends Fragment {
                 NavHostFragment.findNavController(this).navigate(R.id.action_welcomeFragment_to_navigationFragment);
             }
         }
+    }
+
+    private void unHideWelcome() {
+        splashScreen.setVisibility(View.GONE);
+        welcomeText.setVisibility(View.VISIBLE);
+        welcomeImage.setVisibility(View.VISIBLE);
+        signInButton.setVisibility(View.VISIBLE);
+        signUpButton.setVisibility(View.VISIBLE);
     }
 }
