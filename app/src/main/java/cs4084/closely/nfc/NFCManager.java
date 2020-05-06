@@ -35,7 +35,19 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
         }
 
         // Register callback
-        nfcAdapter.setNdefPushMessageCallback(this, closely);
+        enableNFC();
+    }
+
+    public void disableNFC() {
+        if(nfcAdapter != null) {
+            nfcAdapter.setNdefPushMessageCallback(null, null);
+        }
+    }
+
+    public void enableNFC() {
+        if(nfcAdapter != null) {
+            nfcAdapter.setNdefPushMessageCallback(this, closely);
+        }
     }
 
     @Override
