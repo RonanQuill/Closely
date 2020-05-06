@@ -40,7 +40,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback{
 
     public void disableNFC() {
         if(nfcAdapter != null) {
-            nfcAdapter.setNdefPushMessageCallback(null, null);
+            nfcAdapter.setNdefPushMessageCallback(null, closely);
         }
     }
 
