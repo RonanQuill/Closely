@@ -33,4 +33,4 @@ When testing the application you can sign up for the application and create your
 
 
 ## Firebase Project Overview
-[Closely Firebase Project](https://www.youtube.com/watch?v=BnTW6fZz-1E)
+[Closely Firebase Project](https://console.firebase.google.com/project/closely-34ee4/overview)
