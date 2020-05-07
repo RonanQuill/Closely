@@ -34,3 +34,7 @@ Features still being worked on
 | VSDTqD2Kxjhv72kGu1KW5XvI6z62      | User 1 | 9| user@email.com | password |
 | aNW8sh1ltONghyHzYCzSjk3omkE2      | user 4     |   4 |user4@email.com|  password |
 | 2FDtyKEfsKNdkky4n8c8qTYxLQr1| User2      |    0 |user1@email.com| password |
+
+
+## Firebase Project Overview
+[Closely Firebase Project](https://www.youtube.com/watch?v=BnTW6fZz-1E)
