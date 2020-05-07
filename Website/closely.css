@@ -1,4 +1,4 @@
-* { border: 1px solid black; }
+
 html {
     
     height: 100%;
@@ -12,8 +12,24 @@ body {
 
 }
 
-.background-image {
+#closely-logo {
+    margin-right: 50px;
+}
 
+#download-links img {
+    margin-right: 20px;
+}
+
+#closely-heading {
+    font-size: 3em;
+    margin: 0;
+}
+
+#closely-subheading {
+    font-size: 1em;
+}
+
+.background-image {
     background-image: url("resources/background.jpeg");
     height: 100%;
 
@@ -68,7 +84,6 @@ body {
 }
 
 .nav-links li a {
-    //color: white;
     opacity: 0.7;
     text-decoration: none;
     transition: all 0.3s ease 0s;
