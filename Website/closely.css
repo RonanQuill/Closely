@@ -1,0 +1,79 @@
+* { border: 1px solid black; }
+html {
+    
+    height: 100%;
+}
+
+body {
+    font-family: 'Montserrat';
+    margin: 0;
+    padding: 0;
+    height: 100%;
+
+}
+
+.background-image {
+
+    background-image: url("resources/background.jpeg");
+    height: 100%;
+
+    /* Add the blur effect */
+    filter: blur(6px);
+    -webkit-filter: blur(6px);
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+#left-column {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#closely-details {
+    display: flex;
+    flex-direction: column;
+}
+
+#download-links {
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+}
+
+.nav-links li {
+    padding: 0px 10px;
+}
+
+.nav-links li a {
+    //color: white;
+    opacity: 0.7;
+    text-decoration: none;
+    transition: all 0.3s ease 0s;
+}
+
+.nav-links li a:hover {
+    opacity: 1;
+}
